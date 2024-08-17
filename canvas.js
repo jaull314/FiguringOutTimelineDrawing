@@ -9,7 +9,9 @@ class Timeline{
         this.unitsPerPixel = undefined;
         this.visiblePartOfTimeline= [];
         this.startOfVisibleTimeline =  undefined;
-        this.endOfVisibleTimeline = undefined
+        this.endOfVisibleTimeline = undefined;
+        this.minOfBothTimelines = undefined;
+        this.maxOfBothTimelines = undefined;
         if(eventsArr.length > 1){
             let timelineRange = eventsArr[eventsArr.length - 1] - eventsArr[0]
             let logOfRange = Math.floor(Math.log10(timelineRange))
@@ -19,6 +21,44 @@ class Timeline{
         }
         this.startOfVisibleTimeline =  (eventsArr.length > 0) ? eventsArr[0] : 0;
         this.endOfVisibleTimeline = this.startOfVisibleTimeline + (this.width * this.unitsPerPixel);
+    }
+
+    setMinForBothTimelines(otherTimeline){
+        if(this.eventsArr.length == 0 && otherTimeline.eventsArr.length == 0){
+            this.minOfBothTimelines = undefined;
+            other.minOfBothTimelines = undefined;
+        }else if(this.eventsArr.length == 0 && otherTimeline.eventsArr.length > 0){
+            this.minOfBothTimelines = otherTimeline.eventsArr[0];
+            otherTimeline.minOfBothTimelines = otherTimeline.eventsArr[0];
+        }else if(this.eventsArr.length > 0 && otherTimeline.eventsArr.length == 0){
+            this.minOfBothTimelines = this.eventsArr[0];
+            otherTimeline.minOfBothTimelines = this.eventsArr[0];
+        }else if(this.eventsArr[0] <= otherTimeline.eventsArr[0]){
+            this.minOfBothTimelines = this.eventsArr[0];
+            otherTimeline.minOfBothTimelines = this.eventsArr[0];
+        }else{
+            this.minOfBothTimelines = otherTimeline.eventsArr[0];
+            otherTimeline.minOfBothTimelines = otherTimeline.eventsArr[0];
+        }
+    }
+
+    setMaxForBothTimelines(otherTimeline){
+        if(this.eventsArr.length == 0 && otherTimeline.eventsArr.length == 0){
+            this.maxOfBothTimelines = undefined;
+            other.maxOfBothTimelines = undefined;
+        }else if(this.eventsArr.length == 0 && otherTimeline.eventsArr.length > 0){
+            this.maxOfBothTimelines = otherTimeline.eventsArr[otherTimeline.eventsArr.length - 1];
+            otherTimeline.maxOfBothTimelines = otherTimeline.eventsArr[otherTimeline.eventsArr.length - 1];
+        }else if(this.eventsArr.length > 0 && otherTimeline.eventsArr.length == 0){
+            this.maxOfBothTimelines = this.eventsArr[this.eventsArr.length - 1];
+            otherTimeline.maxOfBothTimelines = this.eventsArr[this.eventsArr.length - 1];
+        }else if(this.eventsArr[this.eventsArr.length - 1] >= otherTimeline.eventsArr[otherTimeline.eventsArr.length - 1]){
+            this.maxOfBothTimelines = this.eventsArr[this.eventsArr.length - 1];
+            otherTimeline.maxOfBothTimelines = this.eventsArr[this.eventsArr.length - 1];
+        }else{
+            this.maxOfBothTimelines = otherTimeline.eventsArr[otherTimeline.eventsArr.length - 1];
+            otherTimeline.maxOfBothTimelines = otherTimeline.eventsArr[otherTimeline.eventsArr.length - 1];
+        }
     }
 
     getXCordForEvent(event){
@@ -79,7 +119,7 @@ arrTimelineA.sort((a, b) => {
     return a - b;
 })
 let timelineA = new Timeline(arrTimelineA, contextA)
-timelineA.drawTimeline()
+//timelineA.drawTimeline()
 
 
 const canvasB = document.getElementById('canvasB');
@@ -93,4 +133,12 @@ arrTimelineB.sort((a, b) => {
     return a - b;
 })
 let timelineB = new Timeline(arrTimelineB, contextB) 
-timelineB.drawTimeline()
+//timelineB.drawTimeline()
+
+timelineA.setMinForBothTimelines(timelineB)
+console.log(timelineA.minOfBothTimelines)
+console.log(timelineB.minOfBothTimelines)
+
+timelineA.setMaxForBothTimelines(timelineB)
+console.log(timelineA.maxOfBothTimelines)
+console.log(timelineB.maxOfBothTimelines)
