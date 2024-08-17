@@ -9,7 +9,7 @@ class Timeline{
         }
     }
 
-    constructor(eventsArr, context, notBeingCompared){
+    constructor(eventsArr, context, beingCompared){
         this.eventsArr = eventsArr;
         this.ctx = context;
         this.xCord = 80;
@@ -21,7 +21,7 @@ class Timeline{
         this.unitsPerPixel = undefined;
         this.numUnitsForDisplayedStart =  undefined;
         this.numUnitsForDisplayedEnd = undefined
-        if(notBeingCompared){
+        if(!beingCompared){
             this.unitsPerPixel = this.calculateInitialUnitsPerPixel(eventsArr);
             this.numUnitsForDisplayedStart =  (eventsArr.length > 0) ? eventsArr[0] : 0;
             this.numUnitsForDisplayedEnd = this.numUnitsForDisplayedStart + (this.width * this.unitsPerPixel);
@@ -70,7 +70,7 @@ const arrTimelineA = [100, 500, 701, 899];
 arrTimelineA.sort((a, b) => {
     return a - b;
 })
-let timelineA = new Timeline(arrTimelineA, contextA, true)
+let timelineA = new Timeline(arrTimelineA, contextA, false)
 drawTimeline(timelineA)
 
 
@@ -85,5 +85,5 @@ const arrTimelineB = [100, 500, 801, 1099];
 arrTimelineB.sort((a, b) => {
     return a - b;
 })
-let timelineB = new Timeline(arrTimelineB, contextB, true) 
+let timelineB = new Timeline(arrTimelineB, contextB, false) 
 drawTimeline(timelineB)
