@@ -1,25 +1,32 @@
-function calculateInitialUnitsPerPixel(eventsArr){
-    if(eventsArr.length > 1){
-        let timelineRange = eventsArr[eventsArr.length - 1] - eventsArr[0]
-        let logOfRange = Math.floor(Math.log10(timelineRange))
-        return 10 ** (logOfRange - 2)
-    }else{
-        return undefined;
+class Timeline{
+    calculateInitialUnitsPerPixel(eventsArr){
+        if(eventsArr.length > 1){
+            let timelineRange = eventsArr[eventsArr.length - 1] - eventsArr[0]
+            let logOfRange = Math.floor(Math.log10(timelineRange))
+            return 10 ** (logOfRange - 2)
+        }else{
+            return undefined;
+        }
     }
-}
 
-function Timeline(eventsArr, context){
-    this.eventsArr = eventsArr,
-    this.ctx = context,
-    this.xCord = 80,
-    this.yCord = 300,
-    this.width = 1000,
-    this.height = 2,
-    this.unitsPerPixel = calculateInitialUnitsPerPixel(eventsArr);
-    this.numUnitsForDisplayedStart =  (eventsArr.length > 0) ? eventsArr[0] : 0;
-    this.numUnitsForDisplayedEnd = this.numUnitsForDisplayedStart + (this.width * this.unitsPerPixel);
-    this.currEvent = undefined,
-    this.xCordOfCurrEvent = undefined
+    constructor(eventsArr, context, notBeingCompared){
+        this.eventsArr = eventsArr;
+        this.ctx = context;
+        this.xCord = 80;
+        this.yCord = 300;
+        this.width = 1000;
+        this.height = 2;
+        this.currEvent = undefined;
+        this.xCordOfCurrEvent = undefined;
+        this.unitsPerPixel = undefined;
+        this.numUnitsForDisplayedStart =  undefined;
+        this.numUnitsForDisplayedEnd = undefined
+        if(notBeingCompared){
+            this.unitsPerPixel = this.calculateInitialUnitsPerPixel(eventsArr);
+            this.numUnitsForDisplayedStart =  (eventsArr.length > 0) ? eventsArr[0] : 0;
+            this.numUnitsForDisplayedEnd = this.numUnitsForDisplayedStart + (this.width * this.unitsPerPixel);
+        }
+    }
 }
 
 function getXCord(timeline){
@@ -63,7 +70,7 @@ const arrTimelineA = [100, 500, 701, 899];
 arrTimelineA.sort((a, b) => {
     return a - b;
 })
-let timelineA = new Timeline(arrTimelineA, contextA)
+let timelineA = new Timeline(arrTimelineA, contextA, true)
 drawTimeline(timelineA)
 
 
@@ -78,5 +85,5 @@ const arrTimelineB = [100, 500, 801, 1099];
 arrTimelineB.sort((a, b) => {
     return a - b;
 })
-let timelineB = new Timeline(arrTimelineB, contextB) 
+let timelineB = new Timeline(arrTimelineB, contextB, true) 
 drawTimeline(timelineB)
