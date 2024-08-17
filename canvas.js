@@ -31,16 +31,23 @@ class Timeline{
         const distanceFromTimelineStart = event - this.numUnitsForDisplayedStart
         return Math.floor(distanceFromTimelineStart / this.unitsPerPixel)
     }
-    
+
     setDisplayedEventsArr(){
+        if(this.eventsArr.length == 0) return;
         this.displayedEventsArr = [];
         let currEvent;
         let xCordOfCurrEvent;
-        for(let i=0; i < this.eventsArr.length; i++){
-            currEvent = this.eventsArr[i]
-            if(currEvent >= this.numUnitsForDisplayedStart && currEvent <= this.numUnitsForDisplayedEnd){
-                xCordOfCurrEvent = this.getXCordForEvent(currEvent);
-                this.displayedEventsArr.push([xCordOfCurrEvent, currEvent])
+        if(this.eventsArr.length == 1){
+            currEvent = this.eventsArr[0];
+            xCordOfCurrEvent = 0;
+            this.displayedEventsArr.push([xCordOfCurrEvent, currEvent]);
+        }else{
+            for(let i=0; i < this.eventsArr.length; i++){
+                currEvent = this.eventsArr[i]
+                if(currEvent >= this.numUnitsForDisplayedStart && currEvent <= this.numUnitsForDisplayedEnd){
+                    xCordOfCurrEvent = this.getXCordForEvent(currEvent);
+                    this.displayedEventsArr.push([xCordOfCurrEvent, currEvent])
+                }
             }
         }
     }
@@ -51,25 +58,18 @@ class Timeline{
             // theis vertical line tick is 1 pixel wide and 44 pixels tall 
             //      (x,  y, width, height)                              
             this.ctx.fillRect(this.xCord + xCordOfCurrEvent, this.yCord - 20, 1, 44);
-        } 
+        }
     }
 
     drawTimeline(){
         /* draw main horizontal line of timeline
                         (x,  y, width, height)                              */
         this.ctx.fillRect(this.xCord, this.yCord, this.width, this.height);
-        // draw a vertical line tick for each event
-        if(this.eventsArr.length == 0) return;
-        if(this.eventsArr.length == 1){
-            /* this vertical line tick is 1 pixel wide and 44 pixels tall 
-                            (x,  y, width, height)             */
-            this.ctx.fillRect(this.xCord, this.yCord - 20, 1, 44);
-            return;
-        }else{
-            this.setDisplayedEventsArr()
-            this.drawDisplayedEvents();
-            return;
-        }
+        /* Based on the unitsPerPixel scale used, find which events fit 
+        on the screen and therefore will be need to be displayed */
+        this.setDisplayedEventsArr();
+        // draw a vertical line tick for each event and write out its corresponding text
+        this.drawDisplayedEvents();
     }
 }
 
@@ -81,7 +81,7 @@ canvasA.height = window.innerHeight * .5;
 const contextA = canvasA.getContext("2d");
 contextA.fillStyle = "red";
 
-const arrTimelineA = [100, 500, 701, 899];
+const arrTimelineA = [100];
 arrTimelineA.sort((a, b) => {
     return a - b;
 })
