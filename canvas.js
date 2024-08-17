@@ -1,4 +1,3 @@
-// blah
 class Timeline{
     calculateInitialUnitsPerPixel(eventsArr){
         if(eventsArr.length > 1){
