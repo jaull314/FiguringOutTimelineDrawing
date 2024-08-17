@@ -16,8 +16,6 @@ class Timeline{
         this.yCord = 300;
         this.width = 1000;
         this.height = 2;
-        this.currEvent = undefined;
-        this.xCordOfCurrEvent = undefined;
         this.unitsPerPixel = undefined;
         this.numUnitsForDisplayedStart =  undefined;
         this.numUnitsForDisplayedEnd = undefined
@@ -29,8 +27,8 @@ class Timeline{
     }
 }
 
-function getXCord(timeline){
-    const distanceFromTimelineStart = timeline.currEvent - timeline.numUnitsForDisplayedStart
+function getXCord(timeline, currEvent){
+    const distanceFromTimelineStart = currEvent - timeline.numUnitsForDisplayedStart
     return Math.floor(distanceFromTimelineStart / timeline.unitsPerPixel)
 }
 
@@ -46,14 +44,16 @@ function drawTimeline(timeline){
         timeline.ctx.fillRect(timeline.xCord, timeline.yCord - 20, 1, 44);
         return;
     }else{
+        let currEvent;
+        let xCordOfCurrEvent;
         for(let i=0; i < timeline.eventsArr.length; i++){
-            timeline.currEvent = timeline.eventsArr[i]
+            currEvent = timeline.eventsArr[i]
             //console.log(timeline.currEvent)
-            if(timeline.currEvent >= timeline.numUnitsForDisplayedStart && timeline.currEvent <= timeline.numUnitsForDisplayedEnd){
-                timeline.xCordOfCurrEvent = getXCord(timeline);
+            if(currEvent >= timeline.numUnitsForDisplayedStart && currEvent <= timeline.numUnitsForDisplayedEnd){
+                xCordOfCurrEvent = getXCord(timeline, currEvent);
                 /* theis vertical line tick is 1 pixel wide and 44 pixels tall 
                         (x,  y, width, height)                              */
-                timeline.ctx.fillRect(timeline.xCord + timeline.xCordOfCurrEvent, timeline.yCord - 20, 1, 44);
+                timeline.ctx.fillRect(timeline.xCord + xCordOfCurrEvent, timeline.yCord - 20, 1, 44);
             }
         }
         return;
