@@ -63,9 +63,10 @@ const arrTimelineA = [100, 500, 701, 899];
 arrTimelineA.sort((a, b) => {
     return a - b;
 })
-
 let timelineA = new Timeline(arrTimelineA, contextA)
 drawTimeline(timelineA)
+
+
 
 const canvasB = document.getElementById('canvasB');
 canvasB.width = window.innerWidth * .8;
@@ -77,6 +78,5 @@ const arrTimelineB = [100, 500, 801, 1099];
 arrTimelineB.sort((a, b) => {
     return a - b;
 })
-
 let timelineB = new Timeline(arrTimelineB, contextB) 
 drawTimeline(timelineB)
