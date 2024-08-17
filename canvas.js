@@ -17,18 +17,18 @@ class Timeline{
         this.width = 1000;
         this.height = 2;
         this.unitsPerPixel = undefined;
-        this.numUnitsForDisplayedStart =  undefined;
-        this.numUnitsForDisplayedEnd = undefined
+        this.timelineStart =  undefined;
+        this.timelineEnd = undefined
         this.displayedEventsArr = [];
         if(!beingCompared){
             this.unitsPerPixel = this.calculateInitialUnitsPerPixel(eventsArr);
-            this.numUnitsForDisplayedStart =  (eventsArr.length > 0) ? eventsArr[0] : 0;
-            this.numUnitsForDisplayedEnd = this.numUnitsForDisplayedStart + (this.width * this.unitsPerPixel);
+            this.timelineStart =  (eventsArr.length > 0) ? eventsArr[0] : 0;
+            this.timelineEnd = this.timelineStart + (this.width * this.unitsPerPixel);
         }
     }
 
     getXCordForEvent(event){
-        const distanceFromTimelineStart = event - this.numUnitsForDisplayedStart
+        const distanceFromTimelineStart = event - this.timelineStart
         return Math.floor(distanceFromTimelineStart / this.unitsPerPixel)
     }
 
@@ -44,7 +44,7 @@ class Timeline{
         }else{
             for(let i=0; i < this.eventsArr.length; i++){
                 currEvent = this.eventsArr[i]
-                if(currEvent >= this.numUnitsForDisplayedStart && currEvent <= this.numUnitsForDisplayedEnd){
+                if(currEvent >= this.timelineStart && currEvent <= this.timelineEnd){
                     xCordOfCurrEvent = this.getXCordForEvent(currEvent);
                     this.displayedEventsArr.push([xCordOfCurrEvent, currEvent])
                 }
@@ -74,7 +74,6 @@ class Timeline{
 }
 
 
-
 const canvasA = document.getElementById('canvasA');
 canvasA.width = window.innerWidth * .8;
 canvasA.height = window.innerHeight * .5;
@@ -87,7 +86,6 @@ arrTimelineA.sort((a, b) => {
 })
 let timelineA = new Timeline(arrTimelineA, contextA, false)
 timelineA.drawTimeline()
-
 
 
 const canvasB = document.getElementById('canvasB');
