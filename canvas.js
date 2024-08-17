@@ -19,6 +19,7 @@ class Timeline{
         this.unitsPerPixel = undefined;
         this.numUnitsForDisplayedStart =  undefined;
         this.numUnitsForDisplayedEnd = undefined
+        this.displayedEventsArr = [];
         if(!beingCompared){
             this.unitsPerPixel = this.calculateInitialUnitsPerPixel(eventsArr);
             this.numUnitsForDisplayedStart =  (eventsArr.length > 0) ? eventsArr[0] : 0;
@@ -29,6 +30,28 @@ class Timeline{
     getXCordForEvent(event){
         const distanceFromTimelineStart = event - this.numUnitsForDisplayedStart
         return Math.floor(distanceFromTimelineStart / this.unitsPerPixel)
+    }
+    
+    setDisplayedEventsArr(){
+        this.displayedEventsArr = [];
+        let currEvent;
+        let xCordOfCurrEvent;
+        for(let i=0; i < this.eventsArr.length; i++){
+            currEvent = this.eventsArr[i]
+            if(currEvent >= this.numUnitsForDisplayedStart && currEvent <= this.numUnitsForDisplayedEnd){
+                xCordOfCurrEvent = this.getXCordForEvent(currEvent);
+                this.displayedEventsArr.push([xCordOfCurrEvent, currEvent])
+            }
+        }
+    }
+    
+    drawDisplayedEvents(){
+        for(let i=0; i < this.displayedEventsArr.length; i++){
+            const [xCordOfCurrEvent, currEvent] = this.displayedEventsArr[i];
+            // theis vertical line tick is 1 pixel wide and 44 pixels tall 
+            //      (x,  y, width, height)                              
+            this.ctx.fillRect(this.xCord + xCordOfCurrEvent, this.yCord - 20, 1, 44);
+        } 
     }
 
     drawTimeline(){
@@ -43,18 +66,8 @@ class Timeline{
             this.ctx.fillRect(this.xCord, this.yCord - 20, 1, 44);
             return;
         }else{
-            let currEvent;
-            let xCordOfCurrEvent;
-            for(let i=0; i < this.eventsArr.length; i++){
-                currEvent = this.eventsArr[i]
-                //console.log(timeline.currEvent)
-                if(currEvent >= this.numUnitsForDisplayedStart && currEvent <= this.numUnitsForDisplayedEnd){
-                    xCordOfCurrEvent = this.getXCordForEvent(currEvent);
-                    /* theis vertical line tick is 1 pixel wide and 44 pixels tall 
-                            (x,  y, width, height)                              */
-                    this.ctx.fillRect(this.xCord + xCordOfCurrEvent, this.yCord - 20, 1, 44);
-                }
-            }
+            this.setDisplayedEventsArr()
+            this.drawDisplayedEvents();
             return;
         }
     }
