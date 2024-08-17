@@ -1,3 +1,13 @@
+function calculateInitialUnitsPerPixel(eventsArr){
+    if(eventsArr.length > 1){
+        let timelineRange = eventsArr[eventsArr.length - 1] - eventsArr[0]
+        let logOfRange = Math.floor(Math.log10(timelineRange))
+        return 10 ** (logOfRange - 2)
+    }else{
+        return undefined;
+    }
+}
+
 function Timeline(eventsArr, context){
     this.eventsArr = eventsArr,
     this.ctx = context,
@@ -5,21 +15,11 @@ function Timeline(eventsArr, context){
     this.yCord = 300,
     this.width = 1000,
     this.height = 2,
-    this.unitsPerPixel = undefined,
-    this.numUnitsForDisplayedStart =  undefined,
-    this.numUnitsForDisplayedEnd = undefined,
+    this.unitsPerPixel = calculateInitialUnitsPerPixel(eventsArr);
+    this.numUnitsForDisplayedStart =  (eventsArr.length > 0) ? eventsArr[0] : 0;
+    this.numUnitsForDisplayedEnd = this.numUnitsForDisplayedStart + (this.width * this.unitsPerPixel);
     this.currEvent = undefined,
     this.xCordOfCurrEvent = undefined
-}
-
-function calculateInitialUnitsPerPixel(timeline){
-    if(timeline.eventsArr.length > 1){
-        let timelineRange = timeline.eventsArr[timeline.eventsArr.length - 1] - timeline.eventsArr[0]
-        let logOfRange = Math.floor(Math.log10(timelineRange))
-        return 10 ** (logOfRange - 2)
-    }else{
-        return undefined;
-    }
 }
 
 function getXCord(timeline){
@@ -59,15 +59,12 @@ canvasA.height = window.innerHeight * .5;
 const contextA = canvasA.getContext("2d");
 contextA.fillStyle = "red";
 
-const arrTimelineA = [100, 500, 801, 1099];
+const arrTimelineA = [100, 500, 701, 899];
 arrTimelineA.sort((a, b) => {
     return a - b;
 })
 
 let timelineA = new Timeline(arrTimelineA, contextA)
-timelineA.unitsPerPixel = calculateInitialUnitsPerPixel(timelineA);
-timelineA.numUnitsForDisplayedStart = (timelineA.eventsArr.length > 0) ? timelineA.eventsArr[0] : 0;
-timelineA.numUnitsForDisplayedEnd = timelineA.numUnitsForDisplayedStart + (timelineA.width * timelineA.unitsPerPixel);
 drawTimeline(timelineA)
 
 const canvasB = document.getElementById('canvasB');
@@ -76,13 +73,10 @@ canvasB.height = window.innerHeight * .5;
 const contextB = canvasB.getContext("2d");
 contextB.fillStyle = "Blue";
 
-const arrTimelineB = [0, 250, 801, 1099];
+const arrTimelineB = [100, 500, 801, 1099];
 arrTimelineB.sort((a, b) => {
     return a - b;
 })
 
 let timelineB = new Timeline(arrTimelineB, contextB) 
-timelineB.unitsPerPixel = calculateInitialUnitsPerPixel(timelineB);
-timelineB.numUnitsForDisplayedStart = (timelineB.eventsArr.length > 0) ? timelineB.eventsArr[0] : 0;
-timelineB.numUnitsForDisplayedEnd = timelineB.numUnitsForDisplayedStart + (timelineB.width * timelineB.unitsPerPixel);
 drawTimeline(timelineB)
