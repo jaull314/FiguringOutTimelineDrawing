@@ -1,15 +1,5 @@
 class Timeline{
-    calculateInitialUnitsPerPixel(eventsArr){
-        if(eventsArr.length > 1){
-            let timelineRange = eventsArr[eventsArr.length - 1] - eventsArr[0]
-            let logOfRange = Math.floor(Math.log10(timelineRange))
-            return 10 ** (logOfRange - 2)
-        }else{
-            return undefined;
-        }
-    }
-
-    constructor(eventsArr, context, beingCompared){
+    constructor(eventsArr, context){
         this.eventsArr = eventsArr;
         this.ctx = context;
         this.xCord = 80;
@@ -17,14 +7,18 @@ class Timeline{
         this.width = 1000;
         this.height = 2;
         this.unitsPerPixel = undefined;
+        this.visiblePartOfTimeline= [];
         this.startOfVisibleTimeline =  undefined;
         this.endOfVisibleTimeline = undefined
-        this.visiblePartOfTimeline= [];
-        if(!beingCompared){
-            this.unitsPerPixel = this.calculateInitialUnitsPerPixel(eventsArr);
-            this.startOfVisibleTimeline =  (eventsArr.length > 0) ? eventsArr[0] : 0;
-            this.endOfVisibleTimeline = this.startOfVisibleTimeline + (this.width * this.unitsPerPixel);
+        if(eventsArr.length > 1){
+            let timelineRange = eventsArr[eventsArr.length - 1] - eventsArr[0]
+            let logOfRange = Math.floor(Math.log10(timelineRange))
+            this.unitsPerPixel = 10 ** (logOfRange - 2)
+        }else{
+            this.unitsPerPixel = 1;
         }
+        this.startOfVisibleTimeline =  (eventsArr.length > 0) ? eventsArr[0] : 0;
+        this.endOfVisibleTimeline = this.startOfVisibleTimeline + (this.width * this.unitsPerPixel);
     }
 
     getXCordForEvent(event){
@@ -84,7 +78,7 @@ const arrTimelineA = [100];
 arrTimelineA.sort((a, b) => {
     return a - b;
 })
-let timelineA = new Timeline(arrTimelineA, contextA, false)
+let timelineA = new Timeline(arrTimelineA, contextA)
 timelineA.drawTimeline()
 
 
@@ -98,5 +92,5 @@ const arrTimelineB = [100, 500, 801, 1099];
 arrTimelineB.sort((a, b) => {
     return a - b;
 })
-let timelineB = new Timeline(arrTimelineB, contextB, false) 
+let timelineB = new Timeline(arrTimelineB, contextB) 
 timelineB.drawTimeline()
