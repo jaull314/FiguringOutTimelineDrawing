@@ -25,40 +25,42 @@ class Timeline{
             this.numUnitsForDisplayedEnd = this.numUnitsForDisplayedStart + (this.width * this.unitsPerPixel);
         }
     }
-}
 
-function getXCord(timeline, currEvent){
-    const distanceFromTimelineStart = currEvent - timeline.numUnitsForDisplayedStart
-    return Math.floor(distanceFromTimelineStart / timeline.unitsPerPixel)
-}
+    getXCordForEvent(event){
+        const distanceFromTimelineStart = event - this.numUnitsForDisplayedStart
+        return Math.floor(distanceFromTimelineStart / this.unitsPerPixel)
+    }
 
-function drawTimeline(timeline){
-    /* draw main horizontal line of timeline
-                    (x,  y, width, height)                              */
-    timeline.ctx.fillRect(timeline.xCord, timeline.yCord, timeline.width, timeline.height);
-    // draw a vertical line tick for each event
-    if(timeline.eventsArr.length == 0) return;
-    if(timeline.eventsArr.length == 1){
-        /* this vertical line tick is 1 pixel wide and 44 pixels tall 
-                        (x,  y, width, height)             */
-        timeline.ctx.fillRect(timeline.xCord, timeline.yCord - 20, 1, 44);
-        return;
-    }else{
-        let currEvent;
-        let xCordOfCurrEvent;
-        for(let i=0; i < timeline.eventsArr.length; i++){
-            currEvent = timeline.eventsArr[i]
-            //console.log(timeline.currEvent)
-            if(currEvent >= timeline.numUnitsForDisplayedStart && currEvent <= timeline.numUnitsForDisplayedEnd){
-                xCordOfCurrEvent = getXCord(timeline, currEvent);
-                /* theis vertical line tick is 1 pixel wide and 44 pixels tall 
+    drawTimeline(){
+        /* draw main horizontal line of timeline
                         (x,  y, width, height)                              */
-                timeline.ctx.fillRect(timeline.xCord + xCordOfCurrEvent, timeline.yCord - 20, 1, 44);
+        this.ctx.fillRect(this.xCord, this.yCord, this.width, this.height);
+        // draw a vertical line tick for each event
+        if(this.eventsArr.length == 0) return;
+        if(this.eventsArr.length == 1){
+            /* this vertical line tick is 1 pixel wide and 44 pixels tall 
+                            (x,  y, width, height)             */
+            this.ctx.fillRect(this.xCord, this.yCord - 20, 1, 44);
+            return;
+        }else{
+            let currEvent;
+            let xCordOfCurrEvent;
+            for(let i=0; i < this.eventsArr.length; i++){
+                currEvent = this.eventsArr[i]
+                //console.log(timeline.currEvent)
+                if(currEvent >= this.numUnitsForDisplayedStart && currEvent <= this.numUnitsForDisplayedEnd){
+                    xCordOfCurrEvent = this.getXCordForEvent(currEvent);
+                    /* theis vertical line tick is 1 pixel wide and 44 pixels tall 
+                            (x,  y, width, height)                              */
+                    this.ctx.fillRect(this.xCord + xCordOfCurrEvent, this.yCord - 20, 1, 44);
+                }
             }
+            return;
         }
-        return;
     }
 }
+
+
 
 const canvasA = document.getElementById('canvasA');
 canvasA.width = window.innerWidth * .8;
@@ -71,7 +73,7 @@ arrTimelineA.sort((a, b) => {
     return a - b;
 })
 let timelineA = new Timeline(arrTimelineA, contextA, false)
-drawTimeline(timelineA)
+timelineA.drawTimeline()
 
 
 
@@ -86,4 +88,4 @@ arrTimelineB.sort((a, b) => {
     return a - b;
 })
 let timelineB = new Timeline(arrTimelineB, contextB, false) 
-drawTimeline(timelineB)
+timelineB.drawTimeline()
