@@ -24,8 +24,25 @@ class Timeline{
             this.startOfVisibleTimeline =  eventsArr[0];
             this.endOfVisibleTimeline = this.startOfVisibleTimeline + (this.width * this.unitsPerPixel);
         }
+        this.isBeingCompared = false;
         this.minEventOfBothTimelines = undefined;
         this.maxEventOfBothTimelines = undefined;
+    }
+
+    caclculateUnitsPerPixel(minEvent, maxEvent){
+        if(maxEvent > minEvent){
+            let timelineRange = maxEvent - minEvent;
+            let logOfRange = Math.floor(Math.log10(timelineRange));
+            return 10 ** (logOfRange - 2);
+        }else{
+            return 1;
+        }
+    }
+
+    setNewUnitsPerPixel(unitsPerPixel){
+        this.unitsPerPixel = unitsPerPixel;
+        this.startOfVisibleTimeline = this.minEventOfTimeline;
+        this.endOfVisibleTimeline = this.startOfVisibleTimeline + (this.width * this.unitsPerPixel);
     }
 
     //==================This section is only needed for comparing Timelines==========================================
@@ -74,23 +91,14 @@ class Timeline{
         }
     }
 
-    setUnitsPerPixelForComparedTimelines(otherTimeline){
-        if(this.maxEventOfBothTimelines > this.minEventOfBothTimelines){
-            let timelineRange = this.maxEventOfBothTimelines - this.minEventOfBothTimelines;
-            let logOfRange = Math.floor(Math.log10(timelineRange));
-            this.unitsPerPixel = 10 ** (logOfRange - 2);
-            otherTimeline.unitsPerPixel = 10 ** (logOfRange - 2);
-        }else{
-            this.unitsPerPixel = 1;
-            otherTimeline.unitsPerPixel = 1;
-        }
-    }
-
     setupComparedTimelinesForDrawing(otherTimeline){
+        this.isBeingCompared = true;
         this.setMinEventForBothTimelines(otherTimeline);
         this.setMaxEventForBothTimelines(otherTimeline);
 
-        this.setUnitsPerPixelForComparedTimelines(otherTimeline);
+        const unitsPerPixel = this.caclculateUnitsPerPixel(this.minEventOfBothTimelines, this.maxEventOfBothTimelines);
+        this.unitsPerPixel = unitsPerPixel;
+        otherTimeline.unitsPerPixel = unitsPerPixel;
 
         this.startOfVisibleTimeline = this.minEventOfBothTimelines;
         otherTimeline.startOfVisibleTimeline = this.minEventOfBothTimelines;
@@ -114,6 +122,7 @@ class Timeline{
             currEvent = this.eventsArr[i]
             if(currEvent >= this.startOfVisibleTimeline && currEvent <= this.endOfVisibleTimeline){
                 xCordOfCurrEvent = this.getXCordForEvent(currEvent);
+                console.log([xCordOfCurrEvent, currEvent])
                 this.visiblePartOfTimeline.push([xCordOfCurrEvent, currEvent])
             }
         }
@@ -129,6 +138,7 @@ class Timeline{
     }
 
     drawTimeline(){
+        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
         /* draw main horizontal line of timeline
                         (x,  y, width, height)                              */
         this.ctx.fillRect(this.xCord, this.yCord, this.width, this.height);
@@ -137,6 +147,22 @@ class Timeline{
         this.setVisiblePartOfTimeline();
         // draw a vertical line tick for each event and write out its corresponding text
         this.drawDisplayedEvents();
+    }
+
+    scrollRight(){
+        if(this.isBeingCompared){
+            if(this.endOfVisibleTimeline < this.maxEventOfBothTimelines){
+                this.startOfVisibleTimeline = this.endOfVisibleTimeline;
+                this.endOfVisibleTimeline = this.startOfVisibleTimeline + (this.width * this.unitsPerPixel);
+                this.drawTimeline()
+            }
+        }else{
+            if(this.endOfVisibleTimeline < this.maxEventOfTimeline){
+                this.startOfVisibleTimeline = this.endOfVisibleTimeline;
+                this.endOfVisibleTimeline = this.startOfVisibleTimeline + (this.width * this.unitsPerPixel);
+                this.drawTimeline()
+            }
+        }
     }
 }
 
@@ -147,29 +173,35 @@ canvasA.height = window.innerHeight * .5;
 const contextA = canvasA.getContext("2d");
 contextA.fillStyle = "red";
 
+
+/*
 const canvasB = document.getElementById('canvasB');
 canvasB.width = window.innerWidth * .8;
 canvasB.height = window.innerHeight * .5;
 const contextB = canvasB.getContext("2d");
 contextB.fillStyle = "Blue";
+*/
 
-const arrTimelineA = [1000];
+
+const arrTimelineA = [0, 200, 900, 1500];
 let timelineA = new Timeline(arrTimelineA, contextA)
+timelineA.setNewUnitsPerPixel(1);
 
-const arrTimelineB = [1,  500, 801, 9990];
-let timelineB = new Timeline(arrTimelineB, contextB) 
+//const arrTimelineB = [1,  500, 801, 9990];
+//let timelineB = new Timeline(arrTimelineB, contextB) 
 
-timelineA.setupComparedTimelinesForDrawing(timelineB);
+//timelineA.setupComparedTimelinesForDrawing(timelineB);
 timelineA.drawTimeline();
-timelineB.drawTimeline();
-
+//timelineB.drawTimeline();
 
 /*
-timelineA.setMaxEventForBothTimelines(timelineB)
-console.log(timelineA.maxEventOfBothTimelines)
-console.log(timelineB.maxEventOfBothTimelines)
-
-timelineA.setMinEventForBothTimelines(timelineB)
-console.log(timelineA.minEventOfBothTimelines)
-console.log(timelineB.minEventOfBothTimelines)
-*/
+const scrollLeftButton = document.getElementById("scrollLeft")
+scrollLeftButton.addEventListener("click", function(e){
+    
+})
+ */
+const scrollRightButton = document.getElementById("scrollRight")
+scrollRightButton.addEventListener("click", function(e){
+    timelineA.scrollRight();
+})
+   

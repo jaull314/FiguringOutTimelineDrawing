@@ -4,3 +4,8 @@
     margin: 5vh auto;
 
 }
+
+#scrollLeft, #scrollRight {
+    height: 4vw;
+    width: 4vw;
+}
