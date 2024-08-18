@@ -7,12 +7,12 @@ class Timeline{
         this.yCord = 300;
         this.width = 1000;
         this.height = 2;
-        this.unitsPerPixel = 1;
+        this.minEventOfTimeline = (eventsArr.length > 0) ? eventsArr[0] : undefined;
+        this.maxEventOfTimeline = (eventsArr.length > 0) ? eventsArr[eventsArr.length - 1] : undefined;
         this.visiblePartOfTimeline= [];
+        this.unitsPerPixel = 1;
         this.startOfVisibleTimeline =  undefined;
         this.endOfVisibleTimeline = undefined;
-        this.minOfBothTimelines = undefined;
-        this.maxOfBothTimelines = undefined;
         if(eventsArr.length > 1){
             let timelineRange = eventsArr[eventsArr.length - 1] - eventsArr[0];
             let logOfRange = Math.floor(Math.log10(timelineRange));
@@ -22,44 +22,53 @@ class Timeline{
             this.startOfVisibleTimeline =  eventsArr[0];
             this.endOfVisibleTimeline = this.startOfVisibleTimeline + (this.width * this.unitsPerPixel);
         }
+        this.minEventOfBothTimelines = undefined;
+        this.maxEventOfBothTimelines = undefined;
     }
 
     //==================This section is only needed for comparing Timelines==========================================
     setMinForBothTimelines(otherTimeline){
-        if(this.eventsArr.length == 0 && otherTimeline.eventsArr.length == 0){
-            this.minOfBothTimelines = undefined;
-            otherTimeline.minOfBothTimelines = undefined;
-        }else if(this.eventsArr.length == 0 && otherTimeline.eventsArr.length > 0){
-            this.minOfBothTimelines = otherTimeline.eventsArr[0];
-            otherTimeline.minOfBothTimelines = otherTimeline.eventsArr[0];
-        }else if(this.eventsArr.length > 0 && otherTimeline.eventsArr.length == 0){
-            this.minOfBothTimelines = this.eventsArr[0];
-            otherTimeline.minOfBothTimelines = this.eventsArr[0];
-        }else if(this.eventsArr[0] <= otherTimeline.eventsArr[0]){
-            this.minOfBothTimelines = this.eventsArr[0];
-            otherTimeline.minOfBothTimelines = this.eventsArr[0];
+        if(this.minEventOfTimeline === undefined && otherTimeline.minEventOfTimeline === undefined){
+            this.minEventOfBothTimelines = undefined;
+            otherTimeline.minEventOfBothTimelines = undefined;
+
+        }else if(this.minEventOfTimeline === undefined && otherTimeline.minEventOfTimeline !== undefined){
+            this.minEventOfBothTimelines = otherTimeline.minEventOfTimeline;
+            otherTimeline.minEventOfBothTimelines = otherTimeline.minEventOfTimeline;
+
+        }else if(this.minEventOfTimeline !== undefined && otherTimeline.minEventOfTimeline === undefined){
+            this.minEventOfBothTimelines = this.minEventOfTimeline;
+            otherTimeline.minEventOfBothTimelines = this.minEventOfTimeline;
+
+        }else if(this.minEventOfTimeline <= otherTimeline.minEventOfTimeline){
+            this.minEventOfBothTimelines = this.minEventOfTimeline;
+            otherTimeline.minEventOfBothTimelines = this.minEventOfTimeline;
+
         }else{
-            this.minOfBothTimelines = otherTimeline.eventsArr[0];
-            otherTimeline.minOfBothTimelines = otherTimeline.eventsArr[0];
+            this.minEventOfBothTimelines = otherTimeline.minEventOfTimeline;
+            otherTimeline.minEventOfBothTimelines = otherTimeline.minEventOfTimeline;
         }
     }
 
     setMaxForBothTimelines(otherTimeline){
-        if(this.eventsArr.length == 0 && otherTimeline.eventsArr.length == 0){
-            this.maxOfBothTimelines = undefined;
-            otherTimeline.maxOfBothTimelines = undefined;
-        }else if(this.eventsArr.length == 0 && otherTimeline.eventsArr.length > 0){
-            this.maxOfBothTimelines = otherTimeline.eventsArr[otherTimeline.eventsArr.length - 1];
-            otherTimeline.maxOfBothTimelines = otherTimeline.eventsArr[otherTimeline.eventsArr.length - 1];
-        }else if(this.eventsArr.length > 0 && otherTimeline.eventsArr.length == 0){
-            this.maxOfBothTimelines = this.eventsArr[this.eventsArr.length - 1];
-            otherTimeline.maxOfBothTimelines = this.eventsArr[this.eventsArr.length - 1];
-        }else if(this.eventsArr[this.eventsArr.length - 1] >= otherTimeline.eventsArr[otherTimeline.eventsArr.length - 1]){
-            this.maxOfBothTimelines = this.eventsArr[this.eventsArr.length - 1];
-            otherTimeline.maxOfBothTimelines = this.eventsArr[this.eventsArr.length - 1];
+        if(this.maxEventOfTimeline === undefined && otherTimeline.maxEventOfTimeline === undefined){
+            this.maxEventOfBothTimelines = undefined;
+            otherTimeline.maxEventOfBothTimelines = undefined;
+
+        }else if(this.maxEventOfTimeline === undefined && otherTimeline.maxEventOfTimeline !== undefined){
+            this.maxEventOfBothTimelines = otherTimeline.maxEventOfTimeline;
+            otherTimeline.maxEventOfBothTimelines = otherTimeline.maxEventOfTimeline;
+
+        }else if(this.maxEventOfTimeline !== undefined && otherTimeline.maxEventOfTimeline === undefined){
+            this.maxEventOfBothTimelines = this.maxEventOfTimeline;
+            otherTimeline.maxEventOfBothTimelines = this.maxEventOfTimeline;
+
+        }else if(this.maxEventOfTimeline >= otherTimeline.maxEventOfTimeline){
+            this.maxEventOfBothTimelines = this.maxEventOfTimeline;
+            otherTimeline.maxEventOfBothTimelines = this.maxEventOfTimeline;
         }else{
-            this.maxOfBothTimelines = otherTimeline.eventsArr[otherTimeline.eventsArr.length - 1];
-            otherTimeline.maxOfBothTimelines = otherTimeline.eventsArr[otherTimeline.eventsArr.length - 1];
+            this.maxEventOfBothTimelines = otherTimeline.maxEventOfTimeline;
+            otherTimeline.maxEventOfBothTimelines = otherTimeline.maxEventOfTimeline;
         }
     }
 
@@ -67,8 +76,8 @@ class Timeline{
         this.setMinForBothTimelines(otherTimeline);
         this.setMaxForBothTimelines(otherTimeline);
 
-        if(this.maxOfBothTimelines > this.minOfBothTimelines){
-            let timelineRange = this.maxOfBothTimelines - this.minOfBothTimelines;
+        if(this.maxEventOfBothTimelines > this.minEventOfBothTimelines){
+            let timelineRange = this.maxEventOfBothTimelines - this.minEventOfBothTimelines;
             let logOfRange = Math.floor(Math.log10(timelineRange));
             this.unitsPerPixel = 10 ** (logOfRange - 2);
             otherTimeline.unitsPerPixel = 10 ** (logOfRange - 2);
@@ -81,8 +90,8 @@ class Timeline{
     setupComparedTimelinesForDrawing(otherTimeline){
         this.setUnitsPerPixelForComparedTimelines(otherTimeline);
 
-        this.startOfVisibleTimeline = this.minOfBothTimelines;
-        otherTimeline.startOfVisibleTimeline = this.minOfBothTimelines;
+        this.startOfVisibleTimeline = this.minEventOfBothTimelines;
+        otherTimeline.startOfVisibleTimeline = this.minEventOfBothTimelines;
 
         this.endOfVisibleTimeline = this.startOfVisibleTimeline + (this.width * this.unitsPerPixel);
         otherTimeline.endOfVisibleTimeline = this.startOfVisibleTimeline + (this.width * this.unitsPerPixel);
@@ -151,3 +160,14 @@ let timelineB = new Timeline(arrTimelineB, contextB)
 //timelineA.setupComparedTimelinesForDrawing(timelineB);
 timelineA.drawTimeline();
 timelineB.drawTimeline();
+
+
+/*
+timelineA.setMaxForBothTimelines(timelineB)
+console.log(timelineA.maxEventOfBothTimelines)
+console.log(timelineB.maxEventOfBothTimelines)
+
+timelineA.setMinForBothTimelines(timelineB)
+console.log(timelineA.minEventOfBothTimelines)
+console.log(timelineB.minEventOfBothTimelines)
+*/
