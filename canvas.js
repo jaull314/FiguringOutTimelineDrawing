@@ -25,6 +25,7 @@ class Timeline{
         this.endOfVisibleTimeline = this.startOfVisibleTimeline + (this.width * this.unitsPerPixel);
     }
 
+    //==================This section is only needed for comparing Timelines==========================================
     setMinForBothTimelines(otherTimeline){
         if(this.eventsArr.length == 0 && otherTimeline.eventsArr.length == 0){
             this.minOfBothTimelines = undefined;
@@ -87,17 +88,15 @@ class Timeline{
         this.endOfVisibleTimeline = this.startOfVisibleTimeline + (this.width * this.unitsPerPixel);
         otherTimeline.endOfVisibleTimeline = this.startOfVisibleTimeline + (this.width * this.unitsPerPixel);
     }
-
+    //===========================================================================================================
+    
     getXCordForEvent(event){
-        console.log(this.startOfVisibleTimeline)
-        console.log(event)
         const distanceFromTimelineStart = event - this.startOfVisibleTimeline
         return Math.floor(distanceFromTimelineStart / this.unitsPerPixel)
     }
 
     setVisiblePartOfTimeline(){
         if(this.eventsArr.length == 0) return;
-
         this.visiblePartOfTimeline = [];
         let currEvent;
         let xCordOfCurrEvent;
