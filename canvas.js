@@ -29,7 +29,7 @@ class Timeline{
     }
 
     //==================This section is only needed for comparing Timelines==========================================
-    setMinForBothTimelines(otherTimeline){
+    setMinEventForBothTimelines(otherTimeline){
         if(this.minEventOfTimeline === undefined && otherTimeline.minEventOfTimeline === undefined){
             this.minEventOfBothTimelines = undefined;
             otherTimeline.minEventOfBothTimelines = undefined;
@@ -52,7 +52,7 @@ class Timeline{
         }
     }
 
-    setMaxForBothTimelines(otherTimeline){
+    setMaxEventForBothTimelines(otherTimeline){
         if(this.maxEventOfTimeline === undefined && otherTimeline.maxEventOfTimeline === undefined){
             this.maxEventOfBothTimelines = undefined;
             otherTimeline.maxEventOfBothTimelines = undefined;
@@ -75,9 +75,6 @@ class Timeline{
     }
 
     setUnitsPerPixelForComparedTimelines(otherTimeline){
-        this.setMinForBothTimelines(otherTimeline);
-        this.setMaxForBothTimelines(otherTimeline);
-
         if(this.maxEventOfBothTimelines > this.minEventOfBothTimelines){
             let timelineRange = this.maxEventOfBothTimelines - this.minEventOfBothTimelines;
             let logOfRange = Math.floor(Math.log10(timelineRange));
@@ -90,6 +87,9 @@ class Timeline{
     }
 
     setupComparedTimelinesForDrawing(otherTimeline){
+        this.setMinEventForBothTimelines(otherTimeline);
+        this.setMaxEventForBothTimelines(otherTimeline);
+
         this.setUnitsPerPixelForComparedTimelines(otherTimeline);
 
         this.startOfVisibleTimeline = this.minEventOfBothTimelines;
@@ -159,17 +159,17 @@ let timelineA = new Timeline(arrTimelineA, contextA)
 const arrTimelineB = [1,  500, 801, 9990];
 let timelineB = new Timeline(arrTimelineB, contextB) 
 
-//timelineA.setupComparedTimelinesForDrawing(timelineB);
+timelineA.setupComparedTimelinesForDrawing(timelineB);
 timelineA.drawTimeline();
 timelineB.drawTimeline();
 
 
 /*
-timelineA.setMaxForBothTimelines(timelineB)
+timelineA.setMaxEventForBothTimelines(timelineB)
 console.log(timelineA.maxEventOfBothTimelines)
 console.log(timelineB.maxEventOfBothTimelines)
 
-timelineA.setMinForBothTimelines(timelineB)
+timelineA.setMinEventForBothTimelines(timelineB)
 console.log(timelineA.minEventOfBothTimelines)
 console.log(timelineB.minEventOfBothTimelines)
 */
