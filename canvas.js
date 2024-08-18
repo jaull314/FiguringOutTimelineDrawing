@@ -1,5 +1,6 @@
 class Timeline{
     constructor(eventsArr, context){
+        eventsArr.sort((a, b) => a - b);
         this.eventsArr = eventsArr;
         this.ctx = context;
         this.xCord = 80;
@@ -12,7 +13,7 @@ class Timeline{
         this.endOfVisibleTimeline = undefined;
         this.minOfBothTimelines = undefined;
         this.maxOfBothTimelines = undefined;
-        
+
         if(eventsArr.length > 1){
             let timelineRange = eventsArr[eventsArr.length - 1] - eventsArr[0];
             let logOfRange = Math.floor(Math.log10(timelineRange));
@@ -88,26 +89,23 @@ class Timeline{
     }
 
     getXCordForEvent(event){
+        console.log(this.startOfVisibleTimeline)
+        console.log(event)
         const distanceFromTimelineStart = event - this.startOfVisibleTimeline
         return Math.floor(distanceFromTimelineStart / this.unitsPerPixel)
     }
 
     setVisiblePartOfTimeline(){
         if(this.eventsArr.length == 0) return;
+
         this.visiblePartOfTimeline = [];
         let currEvent;
         let xCordOfCurrEvent;
-        if(this.eventsArr.length == 1){
-            currEvent = this.eventsArr[0];
-            xCordOfCurrEvent = 0;
-            this.visiblePartOfTimeline.push([xCordOfCurrEvent, currEvent]);
-        }else{
-            for(let i=0; i < this.eventsArr.length; i++){
-                currEvent = this.eventsArr[i]
-                if(currEvent >= this.startOfVisibleTimeline && currEvent <= this.endOfVisibleTimeline){
-                    xCordOfCurrEvent = this.getXCordForEvent(currEvent);
-                    this.visiblePartOfTimeline.push([xCordOfCurrEvent, currEvent])
-                }
+        for(let i=0; i < this.eventsArr.length; i++){
+            currEvent = this.eventsArr[i]
+            if(currEvent >= this.startOfVisibleTimeline && currEvent <= this.endOfVisibleTimeline){
+                xCordOfCurrEvent = this.getXCordForEvent(currEvent);
+                this.visiblePartOfTimeline.push([xCordOfCurrEvent, currEvent])
             }
         }
     }
@@ -140,31 +138,18 @@ canvasA.height = window.innerHeight * .5;
 const contextA = canvasA.getContext("2d");
 contextA.fillStyle = "red";
 
-const arrTimelineA = [9999]//100];
-arrTimelineA.sort((a, b) => {
-    return a - b;
-})
-let timelineA = new Timeline(arrTimelineA, contextA)
-timelineA.drawTimeline()
-
-
 const canvasB = document.getElementById('canvasB');
 canvasB.width = window.innerWidth * .8;
 canvasB.height = window.innerHeight * .5;
 const contextB = canvasB.getContext("2d");
 contextB.fillStyle = "Blue";
 
-const arrTimelineB = [12, 99]//100, 500, 801, 1099];
-arrTimelineB.sort((a, b) => {
-    return a - b;
-})
+const arrTimelineA = [1000];
+let timelineA = new Timeline(arrTimelineA, contextA)
+
+const arrTimelineB = [1,  500, 801, 9990];
 let timelineB = new Timeline(arrTimelineB, contextB) 
-timelineB.drawTimeline()
 
-timelineA.setMinForBothTimelines(timelineB)
-console.log(timelineA.minOfBothTimelines)
-console.log(timelineB.minOfBothTimelines)
-
-timelineA.setMaxForBothTimelines(timelineB)
-console.log(timelineA.maxOfBothTimelines)
-console.log(timelineB.maxOfBothTimelines)
+timelineA.setupComparedTimelinesForDrawing(timelineB);
+timelineA.drawTimeline();
+timelineB.drawTimeline();
