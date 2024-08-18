@@ -7,22 +7,21 @@ class Timeline{
         this.yCord = 300;
         this.width = 1000;
         this.height = 2;
-        this.unitsPerPixel = undefined;
+        this.unitsPerPixel = 1;
         this.visiblePartOfTimeline= [];
         this.startOfVisibleTimeline =  undefined;
         this.endOfVisibleTimeline = undefined;
         this.minOfBothTimelines = undefined;
         this.maxOfBothTimelines = undefined;
-
         if(eventsArr.length > 1){
             let timelineRange = eventsArr[eventsArr.length - 1] - eventsArr[0];
             let logOfRange = Math.floor(Math.log10(timelineRange));
             this.unitsPerPixel = 10 ** (logOfRange - 2);
-        }else{
-            this.unitsPerPixel = 1;
         }
-        this.startOfVisibleTimeline =  (eventsArr.length > 0) ? eventsArr[0] : 0;
-        this.endOfVisibleTimeline = this.startOfVisibleTimeline + (this.width * this.unitsPerPixel);
+        if(eventsArr.length > 0){
+            this.startOfVisibleTimeline =  eventsArr[0];
+            this.endOfVisibleTimeline = this.startOfVisibleTimeline + (this.width * this.unitsPerPixel);
+        }
     }
 
     //==================This section is only needed for comparing Timelines==========================================
@@ -149,6 +148,6 @@ let timelineA = new Timeline(arrTimelineA, contextA)
 const arrTimelineB = [1,  500, 801, 9990];
 let timelineB = new Timeline(arrTimelineB, contextB) 
 
-timelineA.setupComparedTimelinesForDrawing(timelineB);
+//timelineA.setupComparedTimelinesForDrawing(timelineB);
 timelineA.drawTimeline();
 timelineB.drawTimeline();
