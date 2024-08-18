@@ -7,6 +7,8 @@ class Timeline{
         this.yCord = 300;
         this.width = 1000;
         this.height = 2;
+        /* can also use these two below to determine if scrolling left and right 
+        will reveal more timeline in that particular direction */
         this.minEventOfTimeline = (eventsArr.length > 0) ? eventsArr[0] : undefined;
         this.maxEventOfTimeline = (eventsArr.length > 0) ? eventsArr[eventsArr.length - 1] : undefined;
         this.visiblePartOfTimeline= [];
