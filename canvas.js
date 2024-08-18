@@ -12,10 +12,11 @@ class Timeline{
         this.endOfVisibleTimeline = undefined;
         this.minOfBothTimelines = undefined;
         this.maxOfBothTimelines = undefined;
+        
         if(eventsArr.length > 1){
-            let timelineRange = eventsArr[eventsArr.length - 1] - eventsArr[0]
-            let logOfRange = Math.floor(Math.log10(timelineRange))
-            this.unitsPerPixel = 10 ** (logOfRange - 2)
+            let timelineRange = eventsArr[eventsArr.length - 1] - eventsArr[0];
+            let logOfRange = Math.floor(Math.log10(timelineRange));
+            this.unitsPerPixel = 10 ** (logOfRange - 2);
         }else{
             this.unitsPerPixel = 1;
         }
@@ -61,12 +62,37 @@ class Timeline{
         }
     }
 
+    setUnitsPerPixelForComparedTimelines(otherTimeline){
+        this.setMinForBothTimelines(otherTimeline);
+        this.setMaxForBothTimelines(otherTimeline);
+
+        if(this.maxOfBothTimelines > this.minOfBothTimelines){
+            let timelineRange = this.maxOfBothTimelines - this.minOfBothTimelines;
+            let logOfRange = Math.floor(Math.log10(timelineRange));
+            this.unitsPerPixel = 10 ** (logOfRange - 2);
+            otherTimeline.unitsPerPixel = 10 ** (logOfRange - 2);
+        }else{
+            this.unitsPerPixel = 1;
+            otherTimeline.unitsPerPixel = 1;
+        }
+    }
+
+    setupComparedTimelinesForDrawing(otherTimeline){
+        this.setUnitsPerPixelForComparedTimelines(otherTimeline);
+
+        this.startOfVisibleTimeline = this.minOfBothTimelines;
+        otherTimeline.startOfVisibleTimeline = this.minOfBothTimelines;
+
+        this.endOfVisibleTimeline = this.startOfVisibleTimeline + (this.width * this.unitsPerPixel);
+        otherTimeline.endOfVisibleTimeline = this.startOfVisibleTimeline + (this.width * this.unitsPerPixel);
+    }
+
     getXCordForEvent(event){
         const distanceFromTimelineStart = event - this.startOfVisibleTimeline
         return Math.floor(distanceFromTimelineStart / this.unitsPerPixel)
     }
 
-    setDisplayedEventsArr(){
+    setVisiblePartOfTimeline(){
         if(this.eventsArr.length == 0) return;
         this.visiblePartOfTimeline = [];
         let currEvent;
@@ -101,7 +127,7 @@ class Timeline{
         this.ctx.fillRect(this.xCord, this.yCord, this.width, this.height);
         /* Based on the unitsPerPixel scale used, find which events fit 
         on the screen and therefore will be need to be displayed */
-        this.setDisplayedEventsArr();
+        this.setVisiblePartOfTimeline();
         // draw a vertical line tick for each event and write out its corresponding text
         this.drawDisplayedEvents();
     }
@@ -119,7 +145,7 @@ arrTimelineA.sort((a, b) => {
     return a - b;
 })
 let timelineA = new Timeline(arrTimelineA, contextA)
-//timelineA.drawTimeline()
+timelineA.drawTimeline()
 
 
 const canvasB = document.getElementById('canvasB');
@@ -133,7 +159,7 @@ arrTimelineB.sort((a, b) => {
     return a - b;
 })
 let timelineB = new Timeline(arrTimelineB, contextB) 
-//timelineB.drawTimeline()
+timelineB.drawTimeline()
 
 timelineA.setMinForBothTimelines(timelineB)
 console.log(timelineA.minOfBothTimelines)
