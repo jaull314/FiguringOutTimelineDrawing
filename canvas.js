@@ -26,7 +26,7 @@ class Timeline{
     setMinForBothTimelines(otherTimeline){
         if(this.eventsArr.length == 0 && otherTimeline.eventsArr.length == 0){
             this.minOfBothTimelines = undefined;
-            other.minOfBothTimelines = undefined;
+            otherTimeline.minOfBothTimelines = undefined;
         }else if(this.eventsArr.length == 0 && otherTimeline.eventsArr.length > 0){
             this.minOfBothTimelines = otherTimeline.eventsArr[0];
             otherTimeline.minOfBothTimelines = otherTimeline.eventsArr[0];
@@ -45,7 +45,7 @@ class Timeline{
     setMaxForBothTimelines(otherTimeline){
         if(this.eventsArr.length == 0 && otherTimeline.eventsArr.length == 0){
             this.maxOfBothTimelines = undefined;
-            other.maxOfBothTimelines = undefined;
+            otherTimeline.maxOfBothTimelines = undefined;
         }else if(this.eventsArr.length == 0 && otherTimeline.eventsArr.length > 0){
             this.maxOfBothTimelines = otherTimeline.eventsArr[otherTimeline.eventsArr.length - 1];
             otherTimeline.maxOfBothTimelines = otherTimeline.eventsArr[otherTimeline.eventsArr.length - 1];
@@ -114,7 +114,7 @@ canvasA.height = window.innerHeight * .5;
 const contextA = canvasA.getContext("2d");
 contextA.fillStyle = "red";
 
-const arrTimelineA = [100];
+const arrTimelineA = [9999]//100];
 arrTimelineA.sort((a, b) => {
     return a - b;
 })
@@ -128,7 +128,7 @@ canvasB.height = window.innerHeight * .5;
 const contextB = canvasB.getContext("2d");
 contextB.fillStyle = "Blue";
 
-const arrTimelineB = [100, 500, 801, 1099];
+const arrTimelineB = [12, 99]//100, 500, 801, 1099];
 arrTimelineB.sort((a, b) => {
     return a - b;
 })
