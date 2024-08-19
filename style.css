@@ -5,7 +5,7 @@
 
 }
 
-#scrollLeft, #scrollRight {
+#scrollLeft, #scrollRight, #zoomOut, #zoomIn {
     height: 4vw;
     width: 4vw;
 }

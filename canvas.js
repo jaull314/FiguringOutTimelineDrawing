@@ -67,6 +67,7 @@ class Timeline{
 
         }else if(this.maxEventOfTimeline >= otherTimeline.maxEventOfTimeline){
             otherTimeline.maxEventOfTimeline = this.maxEventOfTimeline;
+
         }else{
             this.maxEventOfTimeline = otherTimeline.maxEventOfTimeline;
         }
@@ -86,14 +87,6 @@ class Timeline{
         this.endOfVisibleTimeline = this.startOfVisibleTimeline + (this.width * this.unitsPerPixel);
         otherTimeline.endOfVisibleTimeline = this.startOfVisibleTimeline + (this.width * this.unitsPerPixel);
     }
-
-    scrollRightForBothTimelines(){
-        if(this.endOfVisibleTimeline < this.maxEventOfTimeline){
-            this.startOfVisibleTimeline = this.endOfVisibleTimeline;
-            this.endOfVisibleTimeline = this.startOfVisibleTimeline + (this.width * this.unitsPerPixel);
-            this.drawTimeline()
-        }
-    }
     //===========================================================================================================
     
     getXCordForEvent(event){
@@ -110,7 +103,6 @@ class Timeline{
             currEvent = this.eventsArr[i]
             if(currEvent >= this.startOfVisibleTimeline && currEvent <= this.endOfVisibleTimeline){
                 xCordOfCurrEvent = this.getXCordForEvent(currEvent);
-                console.log([xCordOfCurrEvent, currEvent])
                 this.visiblePartOfTimeline.push([xCordOfCurrEvent, currEvent])
             }
         }
@@ -137,12 +129,28 @@ class Timeline{
         this.drawDisplayedEvents();
     }
 
-    scrollRightForSingleTimeline(){
+    scrollLeftForTimeline(){
+        if(this.startOfVisibleTimeline > this.minEventOfTimeline){
+            this.startOfVisibleTimeline = this.startOfVisibleTimeline -  (this.width * this.unitsPerPixel);
+            if(this.startOfVisibleTimeline < this.minEventOfTimeline){
+                this.startOfVisibleTimeline = this.minEventOfTimeline;
+            }
+            this.endOfVisibleTimeline = this.startOfVisibleTimeline + (this.width * this.unitsPerPixel);
+            this.drawTimeline()
+        }
+    }
+
+    scrollRightForTimeline(){
         if(this.endOfVisibleTimeline < this.maxEventOfTimeline){
             this.startOfVisibleTimeline = this.endOfVisibleTimeline;
             this.endOfVisibleTimeline = this.startOfVisibleTimeline + (this.width * this.unitsPerPixel);
             this.drawTimeline()
         }
+    }
+
+    zoomInForTimeline(){
+        this.setNewUnitsPerPixel(Math.floor(this.unitsPerPixel / 10));
+        this.drawTimeline();
     }
 
 }//end of Timeline Class
@@ -154,6 +162,9 @@ canvasA.height = window.innerHeight * .5;
 const contextA = canvasA.getContext("2d");
 contextA.fillStyle = "red";
 
+const arrTimelineA = [0, 200, 900, 1500];
+let timelineA = new Timeline(arrTimelineA, contextA)
+//timelineA.setNewUnitsPerPixel(1);
 
 /*
 const canvasB = document.getElementById('canvasB');
@@ -161,28 +172,29 @@ canvasB.width = window.innerWidth * .8;
 canvasB.height = window.innerHeight * .5;
 const contextB = canvasB.getContext("2d");
 contextB.fillStyle = "Blue";
+
+const arrTimelineB = [1,  500, 801, 9990];
+let timelineB = new Timeline(arrTimelineB, contextB) 
 */
-
-
-const arrTimelineA = [0, 200, 900, 1500];
-let timelineA = new Timeline(arrTimelineA, contextA)
-timelineA.setNewUnitsPerPixel(1);
-
-//const arrTimelineB = [1,  500, 801, 9990];
-//let timelineB = new Timeline(arrTimelineB, contextB) 
 
 //timelineA.setupComparedTimelinesForDrawing(timelineB);
 timelineA.drawTimeline();
 //timelineB.drawTimeline();
 
-/*
+
 const scrollLeftButton = document.getElementById("scrollLeft")
 scrollLeftButton.addEventListener("click", function(e){
-    
+    timelineA.scrollLeftForTimeline();
+    //timelineB.scrollLeftForTimeline();
 })
-*/
+
 const scrollRightButton = document.getElementById("scrollRight")
 scrollRightButton.addEventListener("click", function(e){
-    timelineA.scrollRightForSingleTimeline();
+    timelineA.scrollRightForTimeline();
+    //timelineB.scrollRightForTimeline();
 })
-   
+
+const zoomInButton = document.getElementById("zoomIn")
+zoomInButton.addEventListener("click", function(e){
+    timelineA.zoomInForTimeline();
+})
