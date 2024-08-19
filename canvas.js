@@ -77,7 +77,7 @@ class Timeline{
         this.setMinEventForBothTimelines(otherTimeline);
         this.setMaxEventForBothTimelines(otherTimeline);
 
-        const unitsPerPixel = this.caclculateUnitsPerPixel(this.earliestEventOfTimeline, this.earliestEventOfTimeline);
+        const unitsPerPixel = this.caclculateUnitsPerPixel(this.earliestEventOfTimeline, this.latestEventOfTimeline);
         this.unitsPerPixel = unitsPerPixel;
         otherTimeline.unitsPerPixel = unitsPerPixel;
 
