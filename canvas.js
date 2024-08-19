@@ -9,8 +9,8 @@ class Timeline{
         this.height = 2;
         /* can also use these two below to determine if scrolling left and right 
         will reveal more timeline in that particular direction */
-        this.minEventOfTimeline = (eventsArr.length > 0) ? eventsArr[0] : undefined;
-        this.maxEventOfTimeline = (eventsArr.length > 0) ? eventsArr[eventsArr.length - 1] : undefined;
+        this.earliestEventOfTimeline = (eventsArr.length > 0) ? eventsArr[0] : undefined;
+        this.latestEventOfTimeline = (eventsArr.length > 0) ? eventsArr[eventsArr.length - 1] : undefined;
         this.visiblePartOfTimeline= [];
         this.unitsPerPixel = 1;
         this.startOfVisibleTimeline =  undefined;
@@ -38,38 +38,38 @@ class Timeline{
 
     setNewUnitsPerPixel(unitsPerPixel){
         this.unitsPerPixel = unitsPerPixel;
-        this.startOfVisibleTimeline = this.minEventOfTimeline;
+        this.startOfVisibleTimeline = this.earliestEventOfTimeline;
         this.endOfVisibleTimeline = this.startOfVisibleTimeline + (this.width * this.unitsPerPixel);
     }
 
     //==================This section is only needed for comparing Timelines==========================================
     setMinEventForBothTimelines(otherTimeline){
-        if(this.minEventOfTimeline === undefined && otherTimeline.minEventOfTimeline !== undefined){
-            this.minEventOfTimeline = otherTimeline.minEventOfTimeline;
+        if(this.earliestEventOfTimeline === undefined && otherTimeline.earliestEventOfTimeline !== undefined){
+            this.earliestEventOfTimeline = otherTimeline.earliestEventOfTimeline;
 
-        }else if(this.minEventOfTimeline !== undefined && otherTimeline.minEventOfTimeline === undefined){
-            otherTimeline.minEventOfTimeline = this.minEventOfTimeline;
+        }else if(this.earliestEventOfTimeline !== undefined && otherTimeline.earliestEventOfTimeline === undefined){
+            otherTimeline.earliestEventOfTimeline = this.earliestEventOfTimeline;
 
-        }else if(this.minEventOfTimeline <= otherTimeline.minEventOfTimeline){
-            otherTimeline.minEventOfTimeline = this.minEventOfTimeline;
+        }else if(this.earliestEventOfTimeline <= otherTimeline.earliestEventOfTimeline){
+            otherTimeline.earliestEventOfTimeline = this.earliestEventOfTimeline;
 
         }else{
-            this.minEventOfTimeline = otherTimeline.minEventOfTimeline;
+            this.earliestEventOfTimeline = otherTimeline.earliestEventOfTimeline;
         }
     }
 
     setMaxEventForBothTimelines(otherTimeline){
-        if(this.maxEventOfTimeline === undefined && otherTimeline.maxEventOfTimeline !== undefined){
-            this.maxEventOfTimeline = otherTimeline.maxEventOfTimeline;
+        if(this.latestEventOfTimeline === undefined && otherTimeline.latestEventOfTimeline !== undefined){
+            this.latestEventOfTimeline = otherTimeline.latestEventOfTimeline;
 
-        }else if(this.maxEventOfTimeline !== undefined && otherTimeline.maxEventOfTimeline === undefined){
-            otherTimeline.maxEventOfTimeline = this.maxEventOfTimeline;
+        }else if(this.latestEventOfTimeline !== undefined && otherTimeline.latestEventOfTimeline === undefined){
+            otherTimeline.latestEventOfTimeline = this.latestEventOfTimeline;
 
-        }else if(this.maxEventOfTimeline >= otherTimeline.maxEventOfTimeline){
-            otherTimeline.maxEventOfTimeline = this.maxEventOfTimeline;
+        }else if(this.latestEventOfTimeline >= otherTimeline.latestEventOfTimeline){
+            otherTimeline.latestEventOfTimeline = this.latestEventOfTimeline;
 
         }else{
-            this.maxEventOfTimeline = otherTimeline.maxEventOfTimeline;
+            this.latestEventOfTimeline = otherTimeline.latestEventOfTimeline;
         }
     }
 
@@ -77,12 +77,12 @@ class Timeline{
         this.setMinEventForBothTimelines(otherTimeline);
         this.setMaxEventForBothTimelines(otherTimeline);
 
-        const unitsPerPixel = this.caclculateUnitsPerPixel(this.minEventOfTimeline, this.maxEventOfTimeline);
+        const unitsPerPixel = this.caclculateUnitsPerPixel(this.earliestEventOfTimeline, this.earliestEventOfTimeline);
         this.unitsPerPixel = unitsPerPixel;
         otherTimeline.unitsPerPixel = unitsPerPixel;
 
-        this.startOfVisibleTimeline = this.minEventOfTimeline;
-        otherTimeline.startOfVisibleTimeline = this.minEventOfTimeline;
+        this.startOfVisibleTimeline = this.earliestEventOfTimeline;
+        otherTimeline.startOfVisibleTimeline = this.earliestEventOfTimeline;
 
         this.endOfVisibleTimeline = this.startOfVisibleTimeline + (this.width * this.unitsPerPixel);
         otherTimeline.endOfVisibleTimeline = this.startOfVisibleTimeline + (this.width * this.unitsPerPixel);
@@ -130,10 +130,10 @@ class Timeline{
     }
 
     scrollLeftForTimeline(){
-        if(this.startOfVisibleTimeline > this.minEventOfTimeline){
+        if(this.startOfVisibleTimeline > this.earliestEventOfTimeline){
             this.startOfVisibleTimeline = this.startOfVisibleTimeline -  (this.width * this.unitsPerPixel);
-            if(this.startOfVisibleTimeline < this.minEventOfTimeline){
-                this.startOfVisibleTimeline = this.minEventOfTimeline;
+            if(this.startOfVisibleTimeline < this.earliestEventOfTimeline){
+                this.startOfVisibleTimeline = this.earliestEventOfTimeline;
             }
             this.endOfVisibleTimeline = this.startOfVisibleTimeline + (this.width * this.unitsPerPixel);
             this.drawTimeline()
@@ -141,7 +141,7 @@ class Timeline{
     }
 
     scrollRightForTimeline(){
-        if(this.endOfVisibleTimeline < this.maxEventOfTimeline){
+        if(this.endOfVisibleTimeline < this.latestEventOfTimeline){
             this.startOfVisibleTimeline = this.endOfVisibleTimeline;
             this.endOfVisibleTimeline = this.startOfVisibleTimeline + (this.width * this.unitsPerPixel);
             this.drawTimeline()
