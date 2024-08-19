@@ -14,7 +14,7 @@ class Timeline{
         this.visiblePartOfTimeline= [];
         this.unitsPerPixel = 1;
         this.maxUnitsPerPixel = 1;
-        this.minUnitsPerPixel = .1;
+        this.minUnitsPerPixel = .01;
         this.startOfVisibleTimeline =  undefined;
         this.endOfVisibleTimeline = undefined;
         if(eventsArr.length > 1){
@@ -82,7 +82,9 @@ class Timeline{
 
         const unitsPerPixel = this.caclculateUnitsPerPixel(this.earliestEventOfTimeline, this.latestEventOfTimeline);
         this.unitsPerPixel = unitsPerPixel;
+        this.maxUnitsPerPixel = unitsPerPixel;
         otherTimeline.unitsPerPixel = unitsPerPixel;
+        otherTimeline.maxUnitsPerPixel = unitsPerPixel;
 
         this.startOfVisibleTimeline = this.earliestEventOfTimeline;
         otherTimeline.startOfVisibleTimeline = this.earliestEventOfTimeline;
