@@ -24,9 +24,6 @@ class Timeline{
             this.startOfVisibleTimeline =  eventsArr[0];
             this.endOfVisibleTimeline = this.startOfVisibleTimeline + (this.width * this.unitsPerPixel);
         }
-        this.isBeingCompared = false;
-        this.minEventOfBothTimelines = undefined;
-        this.maxEventOfBothTimelines = undefined;
     }
 
     caclculateUnitsPerPixel(minEvent, maxEvent){
@@ -47,64 +44,55 @@ class Timeline{
 
     //==================This section is only needed for comparing Timelines==========================================
     setMinEventForBothTimelines(otherTimeline){
-        if(this.minEventOfTimeline === undefined && otherTimeline.minEventOfTimeline === undefined){
-            this.minEventOfBothTimelines = undefined;
-            otherTimeline.minEventOfBothTimelines = undefined;
-
-        }else if(this.minEventOfTimeline === undefined && otherTimeline.minEventOfTimeline !== undefined){
-            this.minEventOfBothTimelines = otherTimeline.minEventOfTimeline;
-            otherTimeline.minEventOfBothTimelines = otherTimeline.minEventOfTimeline;
+        if(this.minEventOfTimeline === undefined && otherTimeline.minEventOfTimeline !== undefined){
+            this.minEventOfTimeline = otherTimeline.minEventOfTimeline;
 
         }else if(this.minEventOfTimeline !== undefined && otherTimeline.minEventOfTimeline === undefined){
-            this.minEventOfBothTimelines = this.minEventOfTimeline;
-            otherTimeline.minEventOfBothTimelines = this.minEventOfTimeline;
+            otherTimeline.minEventOfTimeline = this.minEventOfTimeline;
 
         }else if(this.minEventOfTimeline <= otherTimeline.minEventOfTimeline){
-            this.minEventOfBothTimelines = this.minEventOfTimeline;
-            otherTimeline.minEventOfBothTimelines = this.minEventOfTimeline;
+            otherTimeline.minEventOfTimeline = this.minEventOfTimeline;
 
         }else{
-            this.minEventOfBothTimelines = otherTimeline.minEventOfTimeline;
-            otherTimeline.minEventOfBothTimelines = otherTimeline.minEventOfTimeline;
+            this.minEventOfTimeline = otherTimeline.minEventOfTimeline;
         }
     }
 
     setMaxEventForBothTimelines(otherTimeline){
-        if(this.maxEventOfTimeline === undefined && otherTimeline.maxEventOfTimeline === undefined){
-            this.maxEventOfBothTimelines = undefined;
-            otherTimeline.maxEventOfBothTimelines = undefined;
-
-        }else if(this.maxEventOfTimeline === undefined && otherTimeline.maxEventOfTimeline !== undefined){
-            this.maxEventOfBothTimelines = otherTimeline.maxEventOfTimeline;
-            otherTimeline.maxEventOfBothTimelines = otherTimeline.maxEventOfTimeline;
+        if(this.maxEventOfTimeline === undefined && otherTimeline.maxEventOfTimeline !== undefined){
+            this.maxEventOfTimeline = otherTimeline.maxEventOfTimeline;
 
         }else if(this.maxEventOfTimeline !== undefined && otherTimeline.maxEventOfTimeline === undefined){
-            this.maxEventOfBothTimelines = this.maxEventOfTimeline;
-            otherTimeline.maxEventOfBothTimelines = this.maxEventOfTimeline;
+            otherTimeline.maxEventOfTimeline = this.maxEventOfTimeline;
 
         }else if(this.maxEventOfTimeline >= otherTimeline.maxEventOfTimeline){
-            this.maxEventOfBothTimelines = this.maxEventOfTimeline;
-            otherTimeline.maxEventOfBothTimelines = this.maxEventOfTimeline;
+            otherTimeline.maxEventOfTimeline = this.maxEventOfTimeline;
         }else{
-            this.maxEventOfBothTimelines = otherTimeline.maxEventOfTimeline;
-            otherTimeline.maxEventOfBothTimelines = otherTimeline.maxEventOfTimeline;
+            this.maxEventOfTimeline = otherTimeline.maxEventOfTimeline;
         }
     }
 
     setupComparedTimelinesForDrawing(otherTimeline){
-        this.isBeingCompared = true;
         this.setMinEventForBothTimelines(otherTimeline);
         this.setMaxEventForBothTimelines(otherTimeline);
 
-        const unitsPerPixel = this.caclculateUnitsPerPixel(this.minEventOfBothTimelines, this.maxEventOfBothTimelines);
+        const unitsPerPixel = this.caclculateUnitsPerPixel(this.minEventOfTimeline, this.maxEventOfTimeline);
         this.unitsPerPixel = unitsPerPixel;
         otherTimeline.unitsPerPixel = unitsPerPixel;
 
-        this.startOfVisibleTimeline = this.minEventOfBothTimelines;
-        otherTimeline.startOfVisibleTimeline = this.minEventOfBothTimelines;
+        this.startOfVisibleTimeline = this.minEventOfTimeline;
+        otherTimeline.startOfVisibleTimeline = this.minEventOfTimeline;
 
         this.endOfVisibleTimeline = this.startOfVisibleTimeline + (this.width * this.unitsPerPixel);
         otherTimeline.endOfVisibleTimeline = this.startOfVisibleTimeline + (this.width * this.unitsPerPixel);
+    }
+
+    scrollRightForBothTimelines(){
+        if(this.endOfVisibleTimeline < this.maxEventOfTimeline){
+            this.startOfVisibleTimeline = this.endOfVisibleTimeline;
+            this.endOfVisibleTimeline = this.startOfVisibleTimeline + (this.width * this.unitsPerPixel);
+            this.drawTimeline()
+        }
     }
     //===========================================================================================================
     
@@ -149,22 +137,15 @@ class Timeline{
         this.drawDisplayedEvents();
     }
 
-    scrollRight(){
-        if(this.isBeingCompared){
-            if(this.endOfVisibleTimeline < this.maxEventOfBothTimelines){
-                this.startOfVisibleTimeline = this.endOfVisibleTimeline;
-                this.endOfVisibleTimeline = this.startOfVisibleTimeline + (this.width * this.unitsPerPixel);
-                this.drawTimeline()
-            }
-        }else{
-            if(this.endOfVisibleTimeline < this.maxEventOfTimeline){
-                this.startOfVisibleTimeline = this.endOfVisibleTimeline;
-                this.endOfVisibleTimeline = this.startOfVisibleTimeline + (this.width * this.unitsPerPixel);
-                this.drawTimeline()
-            }
+    scrollRightForSingleTimeline(){
+        if(this.endOfVisibleTimeline < this.maxEventOfTimeline){
+            this.startOfVisibleTimeline = this.endOfVisibleTimeline;
+            this.endOfVisibleTimeline = this.startOfVisibleTimeline + (this.width * this.unitsPerPixel);
+            this.drawTimeline()
         }
     }
-}
+
+}//end of Timeline Class
 
 
 const canvasA = document.getElementById('canvasA');
@@ -199,9 +180,9 @@ const scrollLeftButton = document.getElementById("scrollLeft")
 scrollLeftButton.addEventListener("click", function(e){
     
 })
- */
+*/
 const scrollRightButton = document.getElementById("scrollRight")
 scrollRightButton.addEventListener("click", function(e){
-    timelineA.scrollRight();
+    timelineA.scrollRightForSingleTimeline();
 })
    
