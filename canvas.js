@@ -148,6 +148,11 @@ class Timeline{
         }
     }
 
+    zoomOutForTimeline(){
+        this.setNewUnitsPerPixel(this.unitsPerPixel * 10);
+        this.drawTimeline();
+    }
+
     zoomInForTimeline(){
         this.setNewUnitsPerPixel(Math.floor(this.unitsPerPixel / 10));
         this.drawTimeline();
@@ -192,6 +197,11 @@ const scrollRightButton = document.getElementById("scrollRight")
 scrollRightButton.addEventListener("click", function(e){
     timelineA.scrollRightForTimeline();
     //timelineB.scrollRightForTimeline();
+})
+
+const zoomOutButton = document.getElementById("zoomOut")
+zoomOutButton.addEventListener("click", function(e){
+    timelineA.zoomOutForTimeline();
 })
 
 const zoomInButton = document.getElementById("zoomIn")
