@@ -172,18 +172,18 @@ class Timeline{
 
 const canvasA = document.getElementById('canvasA');
 canvasA.width = window.innerWidth * .8;
-canvasA.height = window.innerHeight * .5;
+canvasA.height = window.innerHeight * .6;
 const contextA = canvasA.getContext("2d");
 contextA.fillStyle = "red";
 
 const arrTimelineA = [0, 200, 900, 1500];
 let timelineA = new Timeline(arrTimelineA, contextA)
-//timelineA.setNewUnitsPerPixel(1);
+
 
 
 const canvasB = document.getElementById('canvasB');
 canvasB.width = window.innerWidth * .8;
-canvasB.height = window.innerHeight * .5;
+canvasB.height = window.innerHeight * .6;
 const contextB = canvasB.getContext("2d");
 contextB.fillStyle = "Blue";
 
@@ -191,6 +191,7 @@ const arrTimelineB = [1,  500, 801, 9990];
 let timelineB = new Timeline(arrTimelineB, contextB) 
 
 
+//timelineA.setNewUnitsPerPixel(1);
 timelineA.setupComparedTimelinesForDrawing(timelineB);
 timelineA.drawTimeline();
 timelineB.drawTimeline();
