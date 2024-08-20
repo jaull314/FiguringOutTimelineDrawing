@@ -4,7 +4,7 @@ class Timeline{
         this.eventsArr = eventsArr;
         this.ctx = context;
         this.xCord = 80;
-        this.yCord = 385;
+        this.yCord = 320;
         this.width = 1000;
         this.height = 2;
         /* can also use these two below to determine if scrolling left and right 
@@ -118,7 +118,7 @@ class Timeline{
             const [xCordOfCurrEvent, currEvent] = this.visiblePartOfTimeline[i];
             // theis vertical line tick is 1 pixel wide and 44 pixels tall 
             //      (x,  y, width, height)                              
-            this.ctx.fillRect(this.xCord + xCordOfCurrEvent, this.yCord - 20, 1, 42);
+            this.ctx.fillRect(this.xCord + xCordOfCurrEvent, this.yCord - 20, 1, 44);
         }
     }
 
@@ -172,7 +172,7 @@ class Timeline{
 
 const canvasA = document.getElementById('canvasA');
 canvasA.width = window.innerWidth * .8;
-canvasA.height = window.innerHeight * .6;
+canvasA.height = window.innerHeight * .5;
 const contextA = canvasA.getContext("2d");
 contextA.fillStyle = "red";
 
@@ -183,7 +183,7 @@ let timelineA = new Timeline(arrTimelineA, contextA)
 
 const canvasB = document.getElementById('canvasB');
 canvasB.width = window.innerWidth * .8;
-canvasB.height = window.innerHeight * .6;
+canvasB.height = window.innerHeight * .5;
 const contextB = canvasB.getContext("2d");
 contextB.fillStyle = "Blue";
 
