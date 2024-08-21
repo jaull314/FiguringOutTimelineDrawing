@@ -4,7 +4,7 @@ class Timeline{
         this.eventsArr = eventsArr;
         this.ctx = context;
         this.xCord = 80;
-        this.yCord = 320;
+        this.yCord = 250;
         this.width = 1000;
         this.height = 2;
         /* can also use these two below to determine if scrolling left and right 
@@ -172,7 +172,7 @@ class Timeline{
 
 const canvasA = document.getElementById('canvasA');
 canvasA.width = window.innerWidth * .8;
-canvasA.height = window.innerHeight * .5;
+canvasA.height = window.innerHeight * .4;
 const contextA = canvasA.getContext("2d");
 contextA.fillStyle = "red";
 
@@ -183,7 +183,7 @@ let timelineA = new Timeline(arrTimelineA, contextA)
 
 const canvasB = document.getElementById('canvasB');
 canvasB.width = window.innerWidth * .8;
-canvasB.height = window.innerHeight * .5;
+canvasB.height = window.innerHeight * .4;
 const contextB = canvasB.getContext("2d");
 contextB.fillStyle = "Blue";
 
