@@ -14,7 +14,7 @@ class Timeline{
         this.visiblePartOfTimeline= [];
         this.unitsPerPixel = 1;
         this.maxUnitsPerPixel = 1;
-        //this.minUnitsPerPixel = .01;
+        this.minUnitsPerPixel = .01;
         this.startOfVisibleTimeline =  undefined;
         this.endOfVisibleTimeline = undefined;
         if(eventsArr.length > 1){
@@ -41,7 +41,6 @@ class Timeline{
 
     setNewUnitsPerPixel(unitsPerPixel){
         this.unitsPerPixel = unitsPerPixel;
-        this.startOfVisibleTimeline = this.earliestEventOfTimeline;
         this.endOfVisibleTimeline = this.startOfVisibleTimeline + (this.width * this.unitsPerPixel);
     }
 
@@ -169,10 +168,10 @@ class Timeline{
     }
 
     zoomInForTimeline(){
-        //if(this.unitsPerPixel > this.minUnitsPerPixel){
+        if(this.unitsPerPixel > this.minUnitsPerPixel){
             this.setNewUnitsPerPixel(this.unitsPerPixel / 10);
             this.drawTimeline();
-        //}
+        }
     }
 
 }//end of Timeline Class
