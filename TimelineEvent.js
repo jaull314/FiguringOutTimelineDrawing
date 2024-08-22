@@ -1,4 +1,4 @@
-class TimelineEvent{
+export default class TimelineEvent{
     splitTitleOrTimeArr(str){
         let splitArr = []
         let currLine = "";

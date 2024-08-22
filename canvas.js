@@ -1,5 +1,7 @@
+import TimelineEvent  from "./TimelineEvent.js";
+
 class Timeline{
-    constructor(eventsArr, context){
+    constructor(context, eventsArr){
         eventsArr.sort((a, b) => a - b);
         this.eventsArr = eventsArr;
         this.ctx = context;
@@ -9,8 +11,8 @@ class Timeline{
         this.height = 2;
         /* can also use these two below to determine if scrolling left and right 
         will reveal more timeline in that particular direction */
-        this.earliestEventOfTimeline = (eventsArr.length > 0) ? eventsArr[0] : undefined;
-        this.latestEventOfTimeline = (eventsArr.length > 0) ? eventsArr[eventsArr.length - 1] : undefined;
+        this.earliestEventOfTimeline = (eventsArr.length > 0) ? eventsArr[0].timeOfEvent : undefined;
+        this.latestEventOfTimeline = (eventsArr.length > 0) ? eventsArr[eventsArr.length - 1].timeOfEvent : undefined;
         this.visiblePartOfTimeline= [];
         this.unitsPerPixel = 1;
         this.maxUnitsPerPixel = 1;
@@ -18,13 +20,13 @@ class Timeline{
         this.startOfVisibleTimeline =  undefined;
         this.endOfVisibleTimeline = undefined;
         if(eventsArr.length > 1){
-            let timelineRange = eventsArr[eventsArr.length - 1] - eventsArr[0];
+            let timelineRange = eventsArr[eventsArr.length - 1].timeOfEvent - eventsArr[0].timeOfEvent;
             let logOfRange = Math.floor(Math.log10(timelineRange));
             this.unitsPerPixel = 10 ** (logOfRange - 2);
             this.maxUnitsPerPixel = 10 ** (logOfRange - 2);
         }
         if(eventsArr.length > 0){
-            this.startOfVisibleTimeline =  eventsArr[0];
+            this.startOfVisibleTimeline =  eventsArr[0].timeOfEvent;
             this.endOfVisibleTimeline = this.startOfVisibleTimeline + (this.width * this.unitsPerPixel);
         }
     }
@@ -45,7 +47,7 @@ class Timeline{
     }
 
     //==================This section is only needed for comparing Timelines==========================================
-    setMinEventForBothTimelines(otherTimeline){
+    setEarliestEventForBothTimelines(otherTimeline){
         if(this.earliestEventOfTimeline === undefined && otherTimeline.earliestEventOfTimeline !== undefined){
             this.earliestEventOfTimeline = otherTimeline.earliestEventOfTimeline;
 
@@ -60,7 +62,7 @@ class Timeline{
         }
     }
 
-    setMaxEventForBothTimelines(otherTimeline){
+    setLatestEventForBothTimelines(otherTimeline){
         if(this.latestEventOfTimeline === undefined && otherTimeline.latestEventOfTimeline !== undefined){
             this.latestEventOfTimeline = otherTimeline.latestEventOfTimeline;
 
@@ -76,8 +78,8 @@ class Timeline{
     }
 
     setupComparedTimelinesForDrawing(otherTimeline){
-        this.setMinEventForBothTimelines(otherTimeline);
-        this.setMaxEventForBothTimelines(otherTimeline);
+        this.setEarliestEventForBothTimelines(otherTimeline);
+        this.setLatestEventForBothTimelines(otherTimeline);
 
         const unitsPerPixel = this.caclculateUnitsPerPixel(this.earliestEventOfTimeline, this.latestEventOfTimeline);
         this.unitsPerPixel = unitsPerPixel;
@@ -98,7 +100,7 @@ class Timeline{
     }
 
     getXCordForEvent(event){
-        const distanceFromTimelineStart = event - this.startOfVisibleTimeline
+        const distanceFromTimelineStart = event.timeOfEvent - this.startOfVisibleTimeline
         return Math.floor(distanceFromTimelineStart / this.unitsPerPixel)
     }
 
@@ -106,22 +108,21 @@ class Timeline{
         if(this.eventsArr.length == 0) return;
         this.visiblePartOfTimeline = [];
         let currEvent;
-        let xCordOfCurrEvent;
         for(let i=0; i < this.eventsArr.length; i++){
             currEvent = this.eventsArr[i]
-            if(currEvent >= this.startOfVisibleTimeline && currEvent <= this.endOfVisibleTimeline){
-                xCordOfCurrEvent = this.getXCordForEvent(currEvent);
-                this.visiblePartOfTimeline.push([xCordOfCurrEvent, currEvent])
+            if(currEvent.timeOfEvent >= this.startOfVisibleTimeline && currEvent.timeOfEvent <= this.endOfVisibleTimeline){
+                currEvent.xCord = this.getXCordForEvent(currEvent);
+                this.visiblePartOfTimeline.push(currEvent)
             }
         }
     }
     
     drawDisplayedEvents(){
         for(let i=0; i < this.visiblePartOfTimeline.length; i++){
-            const [xCordOfCurrEvent, currEvent] = this.visiblePartOfTimeline[i];
+            const currEvent = this.visiblePartOfTimeline[i];
             // theis vertical line tick is 1 pixel wide and 44 pixels tall 
             //      (x,  y, width, height)                              
-            this.ctx.fillRect(this.xCord + xCordOfCurrEvent, this.yCord - 20, 1, 42);
+            this.ctx.fillRect(this.xCord + currEvent.xCord, this.yCord - 20, 1, 42);
         }
     }
 
@@ -183,8 +184,11 @@ canvasA.height = window.innerHeight * .4;
 const contextA = canvasA.getContext("2d");
 contextA.fillStyle = "red";
 
-const arrTimelineA = [0, 200, 900, 1500];
-let timelineA = new Timeline(arrTimelineA, contextA)
+const arrTimelineA = [  new TimelineEvent("", 0),
+                        new TimelineEvent("", 200), 
+                        new TimelineEvent("", 900), 
+                        new TimelineEvent("", 1500)];
+let timelineA = new Timeline(contextA, arrTimelineA)
 
 
 
@@ -194,14 +198,21 @@ canvasB.height = window.innerHeight * .4;
 const contextB = canvasB.getContext("2d");
 contextB.fillStyle = "Blue";
 
-const arrTimelineB = [1,  500, 801, 9990];
-let timelineB = new Timeline(arrTimelineB, contextB) 
+const arrTimelineB = [  new TimelineEvent("", 1),  
+                        new TimelineEvent("", 500), 
+                        new TimelineEvent("", 801), 
+                        new TimelineEvent("",9990)];
+let timelineB = new Timeline(contextB, arrTimelineB) 
+
+
 
 
 //timelineA.setNewUnitsPerPixel(1);
 timelineA.setupComparedTimelinesForDrawing(timelineB);
 timelineA.drawTimeline();
 timelineB.drawTimeline();
+console.log(timelineA.eventsArr)
+
 
 
 const scrollLeftButton = document.getElementById("scrollLeft")
