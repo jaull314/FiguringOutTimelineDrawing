@@ -14,7 +14,7 @@ class Timeline{
         this.visiblePartOfTimeline= [];
         this.unitsPerPixel = 1;
         this.maxUnitsPerPixel = 1;
-        this.minUnitsPerPixel = .01;
+        //this.minUnitsPerPixel = .01;
         this.startOfVisibleTimeline =  undefined;
         this.endOfVisibleTimeline = undefined;
         if(eventsArr.length > 1){
@@ -94,6 +94,10 @@ class Timeline{
     }
     //===========================================================================================================
     
+    roundPixelXCordToNearestHundred(xCord){
+        return Math.round(xCord / 100) * 100;
+    }
+
     getXCordForEvent(event){
         const distanceFromTimelineStart = event - this.startOfVisibleTimeline
         return Math.floor(distanceFromTimelineStart / this.unitsPerPixel)
@@ -118,7 +122,7 @@ class Timeline{
             const [xCordOfCurrEvent, currEvent] = this.visiblePartOfTimeline[i];
             // theis vertical line tick is 1 pixel wide and 44 pixels tall 
             //      (x,  y, width, height)                              
-            this.ctx.fillRect(this.xCord + xCordOfCurrEvent, this.yCord - 20, 1, 44);
+            this.ctx.fillRect(this.xCord + xCordOfCurrEvent, this.yCord - 20, 1, 42);
         }
     }
 
@@ -132,6 +136,10 @@ class Timeline{
         this.setVisiblePartOfTimeline();
         // draw a vertical line tick for each event and write out its corresponding text
         this.drawDisplayedEvents();
+        console.log("unitsPerPixel: ", this.unitsPerPixel);
+        console.log("startOfVisibleTimeline: ", this.startOfVisibleTimeline);
+        console.log("endOfVisibleTimeline: ", this.endOfVisibleTimeline);
+        console.log("===================================================")
     }
 
     scrollLeftForTimeline(){
@@ -161,10 +169,10 @@ class Timeline{
     }
 
     zoomInForTimeline(){
-        if(this.unitsPerPixel > this.minUnitsPerPixel){
-            this.setNewUnitsPerPixel(Math.floor(this.unitsPerPixel / 10));
+        //if(this.unitsPerPixel > this.minUnitsPerPixel){
+            this.setNewUnitsPerPixel(this.unitsPerPixel / 10);
             this.drawTimeline();
-        }
+        //}
     }
 
 }//end of Timeline Class
