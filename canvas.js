@@ -9,6 +9,7 @@ class Timeline{
         this.yCord = 250;
         this.width = 1000;
         this.height = 2;
+        this.timelineTickYCord = 230;
         /* can also use these two below to determine if scrolling left and right 
         will reveal more timeline in that particular direction */
         this.earliestEventOfTimeline = (eventsArr.length > 0) ? eventsArr[0].timeOfEvent : undefined;
@@ -29,6 +30,7 @@ class Timeline{
             this.startOfVisibleTimeline =  eventsArr[0].timeOfEvent;
             this.endOfVisibleTimeline = this.startOfVisibleTimeline + (this.width * this.unitsPerPixel);
         }
+        this.drawQueue = [];
     }
 
     caclculateUnitsPerPixel(minEvent, maxEvent){
@@ -104,6 +106,7 @@ class Timeline{
         return Math.floor(distanceFromTimelineStart / this.unitsPerPixel)
     }
 
+    
     setVisiblePartOfTimeline(){
         if(this.eventsArr.length == 0) return;
         this.visiblePartOfTimeline = [];
@@ -116,16 +119,58 @@ class Timeline{
             }
         }
     }
-    
-    drawDisplayedEvents(){
+
+    setDrawQueue(){
+        this.drawQueue = [];
+        let lastXCord = undefined;
+        let numWithXCord = 0;
+        const shiftForDrawnEventYCord = (5 * 15);
         for(let i=0; i < this.visiblePartOfTimeline.length; i++){
-            const currEvent = this.visiblePartOfTimeline[i];
-            // theis vertical line tick is 1 pixel wide and 44 pixels tall 
-            //      (x,  y, width, height)                              
-            this.ctx.fillRect(this.xCord + currEvent.xCord, this.yCord - 20, 1, 42);
+            let currEvent = this.visiblePartOfTimeline[i];
+            numWithXCord = (currEvent.xCord !== lastXCord) ? 1 : numWithXCord + 1;
+
+            if(numWithXCord <= 3){
+                let numXCordAlreadyInQueue = (numWithXCord - 1);
+                let indexOfFirstXCord = this.drawQueue.length - numXCordAlreadyInQueue;
+                //shift yCord for each drawQueue Event with the same xCord as visibleTimeline[i]
+                for(let i=this.drawQueue.length - 1; i >= indexOfFirstXCord; i--){
+                    // this yCord is for the last line of text in the current drawQueue Event
+                    this.drawQueue[i].yCord = this.drawQueue[i].yCord - shiftForDrawnEventYCord;
+                }
+                // this yCord is for the last line of text in the current drawQueue Event
+                currEvent.yCord = 230;
+                this.drawQueue.push(currEvent)
+                //drawQueue.push([xCord, 230, eventTitleAndTime])
+
+            }else{
+                this.drawQueue.pop();
+                this.drawQueue.pop();
+
+                let elipsisObj = currEvent.returnElipsisObj();
+                elipsisObj.yCord = 230 - shiftForDrawnEventYCord;
+                this.drawQueue.push(elipsisObj);
+
+                // this yCord is for the last line of text in the current drawQueue Event
+                currEvent.yCord = 230;
+                this.drawQueue.push(currEvent);
+                //drawQueue.push([xCord, 230, eventTitleAndTime])
+            }
+            lastXCord = currEvent.xCord;  
         }
     }
 
+    drawEvent(currEvent){
+        let currYCord = currEvent.yCord - currEvent.lineHeight;
+        for(let i=currEvent.titleAndTime.length - 1; i >= 0; i--){
+            this.ctx.fillText(currEvent.titleAndTime[i], this.xCord + currEvent.xCord, currYCord)
+            currYCord -= currEvent.lineHeight;
+        }
+        // theis vertical line tick is 1 pixel wide and 44 pixels tall 
+        //                              (x,                  y,                width, height) 
+        this.ctx.fillRect(this.xCord + currEvent.xCord, this.timelineTickYCord, 1, 42);
+
+    }
+    
     drawTimeline(){
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
         /* draw main horizontal line of timeline
@@ -134,8 +179,12 @@ class Timeline{
         /* Based on the unitsPerPixel scale used, find which events fit 
         on the screen and therefore will be need to be displayed */
         this.setVisiblePartOfTimeline();
-        // draw a vertical line tick for each event and write out its corresponding text
-        this.drawDisplayedEvents();
+        this.setDrawQueue();
+        
+        for(let i=0; i < this.drawQueue.length; i++){
+            this.drawEvent(this.drawQueue[i]);
+            //this.ctx.fillRect(this.xCord + this.drawQueue[i].xCord, this.timelineTickYCord, 1, 42);
+        }
         console.log("unitsPerPixel: ", this.unitsPerPixel);
         console.log("startOfVisibleTimeline: ", this.startOfVisibleTimeline);
         console.log("endOfVisibleTimeline: ", this.endOfVisibleTimeline);
@@ -182,9 +231,11 @@ const canvasA = document.getElementById('canvasA');
 canvasA.width = window.innerWidth * .8;
 canvasA.height = window.innerHeight * .4;
 const contextA = canvasA.getContext("2d");
+contextA.font = "575 12px serif";
+contextA.textAlign = "center";
 contextA.fillStyle = "red";
 
-const arrTimelineA = [  new TimelineEvent("", 0),
+const arrTimelineA = [  new TimelineEvent("blah", 0),
                         new TimelineEvent("", 200), 
                         new TimelineEvent("", 900), 
                         new TimelineEvent("", 1500)];
@@ -196,9 +247,11 @@ const canvasB = document.getElementById('canvasB');
 canvasB.width = window.innerWidth * .8;
 canvasB.height = window.innerHeight * .4;
 const contextB = canvasB.getContext("2d");
+contextB.font = "575 12px serif";
+contextB.textAlign = "center";
 contextB.fillStyle = "Blue";
 
-const arrTimelineB = [  new TimelineEvent("", 1),  
+const arrTimelineB = [  new TimelineEvent("blah", 1),  
                         new TimelineEvent("", 500), 
                         new TimelineEvent("", 801), 
                         new TimelineEvent("",9990)];
