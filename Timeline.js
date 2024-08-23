@@ -3,7 +3,7 @@ export default class Timeline{
         eventsArr.sort((a, b) => a - b);
         this.eventsArr = eventsArr;
         this.ctx = context;
-        this.xCord = 80;
+        this.xCord = 110;
         this.yCord = 250;
         this.width = 1000;
         this.height = 2;
@@ -41,7 +41,7 @@ export default class Timeline{
         }
     }
 
-    setNewUnitsPerPixel(unitsPerPixel){
+    _setNewUnitsPerPixel(unitsPerPixel){
         this.unitsPerPixel = unitsPerPixel;
         this.endOfVisibleTimeline = this.startOfVisibleTimeline + (this.width * this.unitsPerPixel);
     }
@@ -211,14 +211,14 @@ export default class Timeline{
         console.log("this.unitsPerPixel", this.unitsPerPixel)
         console.log("this.maxUnitsPerPixel", this.maxUnitsPerPixel)
         if(this.unitsPerPixel < this.maxUnitsPerPixel){
-            this.setNewUnitsPerPixel(this.unitsPerPixel * 10);
+            this._setNewUnitsPerPixel(this.unitsPerPixel * 10);
             this.drawTimeline();
         }
     }
 
     zoomInForTimeline(){
         if(this.unitsPerPixel > this.minUnitsPerPixel){
-            this.setNewUnitsPerPixel(this.unitsPerPixel / 10);
+            this._setNewUnitsPerPixel(this.unitsPerPixel / 10);
             this.drawTimeline();
         }
     }
