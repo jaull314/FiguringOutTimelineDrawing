@@ -4,7 +4,7 @@ export default class TimelineEvent{
         let currLine = "";
         for(let i=0; i < str.length; i++){
             currLine += str[i];
-            if(currLine.length % this.lineLength === 0 || i == str.length - 1){
+            if(currLine.length % this._lineLength === 0 || i == str.length - 1){
                 splitArr.push(currLine);
                 currLine = ""
             }
@@ -41,7 +41,7 @@ export default class TimelineEvent{
                 elipsisArr.pop();
             }
             let lastLine = elipsisArr[maxNumOfLines - 1];
-            lastLine = lastLine.substring(0, this.lineLength - 3) + "...";
+            lastLine = lastLine.substring(0, this._lineLength - 3) + "...";
 
             elipsisArr[maxNumOfLines - 1] = lastLine;
         }
@@ -69,9 +69,9 @@ export default class TimelineEvent{
     }
 
     constructor(titleStr, timeOfEvent){
-        this.title = titleStr;
+        this._title = titleStr;
         this.timeOfEvent = timeOfEvent;
-        this.lineLength = 12;
+        this._lineLength = 12;
         this.titleAndTime = this.setFormattedTitleAndTime(titleStr, timeOfEvent.toString());
         this.lineHeight = 12;
         this.xCord = undefined;
@@ -79,7 +79,7 @@ export default class TimelineEvent{
         this.yShiftForDrawnEvent = (5 * 15);
     }
 
-    _returnElipsisObj(){
+    returnElipsisObj(){
         let elipsisPlaceHolder = [];
         // change 5 to this.maxNumOfLinesForTitleAndTime
         for(let i=0; i < (this.maxNumLinesForTime + this.maxNumLinesForTitle); i++){
@@ -89,7 +89,7 @@ export default class TimelineEvent{
                 elipsisPlaceHolder.push("");
             }
         }
-        let elipsisObj = new TimelineEvent(this.title, this.timeOfEvent);
+        let elipsisObj = new TimelineEvent(this._title, this.timeOfEvent);
         elipsisObj.titleAndTime = elipsisPlaceHolder;
         elipsisObj.xCord = this.xCord;
         // this yCord is for the last line of text in the current drawQueue Event
