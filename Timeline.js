@@ -113,47 +113,47 @@ export default class Timeline{
         for(let i=0; i < this.eventsArr.length; i++){
             currEvent = this.eventsArr[i]
             if(currEvent.timeOfEvent >= this.startOfVisibleTimeline && currEvent.timeOfEvent <= this.endOfVisibleTimeline){
-                currEvent.xCord = this._getXCordForEvent(currEvent);
                 this.visiblePartOfTimeline.push(currEvent)
             }
         }
     }
 
     _shiftYCordOfEventsInQueue(numEventsShifted){
-        let numXCordAlreadyInQueue = (numEventsShifted - 1);
-        let indexOfFirstXCord = this.drawQueue.length - numXCordAlreadyInQueue;
-        for(let i=this.drawQueue.length - 1; i >= indexOfFirstXCord; i--){
-            // this yCord is for the last line of text in the current drawQueue Event
-            this.drawQueue[i].yCord = this.drawQueue[i].yCord - this.drawQueue[i].yShiftForDrawnEvent;
+        if(this.drawQueue.length > 0){
+            const indexOfFirstXCord = this.drawQueue.length - numEventsShifted;
+            for(let i=this.drawQueue.length - 1; i >= indexOfFirstXCord; i--){
+                // this yCord is for the last line of text in the current drawQueue Event
+                this.drawQueue[i].yCord = this.drawQueue[i].yCord - this.drawQueue[i].yShiftForDrawnEvent;
+            }
         }
     }
 
     _setDrawQueue(){
+        this._setVisiblePartOfTimeline();
         this.drawQueue = [];
         let lastXCord = undefined;
         let numWithXCord = 0;
         for(let i=0; i < this.visiblePartOfTimeline.length; i++){
             let currEvent = this.visiblePartOfTimeline[i];
+            // this yCord is for the last line of text in the current drawQueue Event
+            currEvent.yCord = 230;
+            currEvent.xCord = this._getXCordForEvent(currEvent);
             numWithXCord = (currEvent.xCord !== lastXCord) ? 1 : numWithXCord + 1;
 
             if(numWithXCord <= 3){
                 /* the yCord needs shifted for each Event in drawQueue with the same xCord as currEvent.
                 This because it needs to make room before the current Event is pushed on */
-                this._shiftYCordOfEventsInQueue(numWithXCord);
-                // this yCord is for the last line of text in the current drawQueue Event
-                currEvent.yCord = 230;
+                this._shiftYCordOfEventsInQueue(numWithXCord - 1);
                 this.drawQueue.push(currEvent)
 
             }else{
                 this.drawQueue.pop();
                 this.drawQueue.pop();
-        
-                let elipsisEvent = currEvent._returnElipsisObj();
-                // this yCord is for the last line of text in the current drawQueue Event
-                elipsisEvent.yCord = 230 - elipsisEvent.yShiftForDrawnEvent;
-                this.drawQueue.push(elipsisEvent);
-                // this yCord is for the last line of text in the current drawQueue Event
+                
                 currEvent.yCord = 230;
+                let elipsisEvent = currEvent._returnElipsisObj();
+
+                this.drawQueue.push(elipsisEvent);
                 this.drawQueue.push(currEvent)
             }
             lastXCord = currEvent.xCord;  
@@ -180,7 +180,6 @@ export default class Timeline{
         this.ctx.fillRect(this.xCord, this.yCord, this.width, this.height);
         /* Based on the unitsPerPixel scale used, find which events fit 
         on the screen and therefore will be need to be displayed */
-        this._setVisiblePartOfTimeline();
         this._setDrawQueue();
         
         for(let i=0; i < this.drawQueue.length; i++){

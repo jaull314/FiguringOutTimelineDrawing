@@ -17,7 +17,7 @@ export default class TimelineEvent{
         for(let i=1; i < hyphensArr.length; i++){
             let prevLine = hyphensArr[i - 1]
             if(prevLine[prevLine.length - 1] !== " " && hyphensArr[i][0] !== " "){
-                hyphensArr[i - 1] = prevLine + "-"
+                hyphensArr[i - 1] = prevLine + "-";
             }
         }
         return hyphensArr;
@@ -92,7 +92,8 @@ export default class TimelineEvent{
         let elipsisObj = new TimelineEvent(this.title, this.timeOfEvent);
         elipsisObj.titleAndTime = elipsisPlaceHolder;
         elipsisObj.xCord = this.xCord;
-        elipsisObj.yCord = undefined;
+        // this yCord is for the last line of text in the current drawQueue Event
+        elipsisObj.yCord = this.yCord - this.yShiftForDrawnEvent;
         return elipsisObj;
     }
 
