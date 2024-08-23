@@ -150,9 +150,7 @@ export default class Timeline{
                 this.drawQueue.pop();
                 this.drawQueue.pop();
                 
-                currEvent.yCord = 230;
                 let elipsisEvent = currEvent._returnElipsisObj();
-
                 this.drawQueue.push(elipsisEvent);
                 this.drawQueue.push(currEvent)
             }
