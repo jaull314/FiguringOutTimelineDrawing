@@ -8,8 +8,9 @@ export default class Timeline{
         this.width = 1000;
         this.height = 2;
         this.timelineTickYCord = 230;
-        /* can also use these two below to determine if scrolling left and right 
-        will reveal more timeline in that particular direction */
+        /* earliest/latestEventOfTimeline is used to determine if scrolling left or right will reveal more timeline 
+        in that particular direction. They're also used to determine if an event is currently visible on the currently
+        displayed portion of the timeline */
         this.earliestEventOfTimeline = (eventsArr.length > 0) ? eventsArr[0].timeOfEvent : undefined;
         this.latestEventOfTimeline = (eventsArr.length > 0) ? eventsArr[eventsArr.length - 1].timeOfEvent : undefined;
         this.visiblePartOfTimeline= [];
@@ -139,7 +140,8 @@ export default class Timeline{
             if(numWithXCord <= 3){
                 let numXCordAlreadyInQueue = (numWithXCord - 1);
                 let indexOfFirstXCord = this.drawQueue.length - numXCordAlreadyInQueue;
-                //for each drawQueue Event with the same xCord as currEvent shift yCord 
+                /* the yCord needs shifted for each Event in drawQueue with the same xCord as currEvent.
+                This because it needs to make room before the current Event is pushed on */
                 for(let i=this.drawQueue.length - 1; i >= indexOfFirstXCord; i--){
                     // this yCord is for the last line of text in the current drawQueue Event
                     this.drawQueue[i].yCord = this.drawQueue[i].yCord - currEvent.yShiftForDrawnEvent;
@@ -147,7 +149,6 @@ export default class Timeline{
                 // this yCord is for the last line of text in the current drawQueue Event
                 currEvent.yCord = 230;
                 this.drawQueue.push(currEvent)
-                //drawQueue.push([xCord, 230, eventTitleAndTime])
 
             }else{
                 let elipsisEvent = currEvent._returnElipsisObj();
@@ -170,6 +171,7 @@ export default class Timeline{
     }
     
     drawTimeline(){
+        // erase what's currently on the canvas before drawing the new timeline
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
         /* draw main horizontal line of timeline
                         (x,  y, width, height)                              */
