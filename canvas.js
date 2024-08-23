@@ -26,8 +26,8 @@ contextB.textAlign = "center";
 contextB.fillStyle = "Blue";
 
 const arrTimelineB = [  new TimelineEvent("blah", 1),  
-                        new TimelineEvent("blha", 500), 
-                        new TimelineEvent("balh", 801), 
+                        new TimelineEvent("blha", 1), 
+                        new TimelineEvent("balh", 1), 
                         new TimelineEvent("halb",9990)];
 let timelineB = new Timeline(contextB, arrTimelineB) 
 
