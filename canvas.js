@@ -32,7 +32,6 @@ const arrTimelineB = [  new TimelineEvent("blah", 1),
 let timelineB = new Timeline(contextB, arrTimelineB) 
 
 
-//timelineA.setNewUnitsPerPixel(1);
 timelineA.setupComparedTimelinesForDrawing(timelineB);
 timelineA.drawTimeline();
 timelineB.drawTimeline();
