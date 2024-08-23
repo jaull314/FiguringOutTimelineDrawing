@@ -31,7 +31,7 @@ export default class Timeline{
         this.drawQueue = [];
     }
 
-    _caclculateUnitsPerPixel(minEvent, maxEvent){
+    _calculateUnitsPerPixel(minEvent, maxEvent){
         if(maxEvent > minEvent){
             let timelineRange = maxEvent - minEvent;
             let logOfRange = Math.floor(Math.log10(timelineRange));
@@ -185,7 +185,7 @@ export default class Timeline{
         console.log("unitsPerPixel: ", this.unitsPerPixel);
         console.log("startOfVisibleTimeline: ", this.startOfVisibleTimeline);
         console.log("endOfVisibleTimeline: ", this.endOfVisibleTimeline);
-        console.log("===================================================")
+        console.log("===============================================")
     }
 
     scrollLeftForTimeline(){
