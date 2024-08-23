@@ -3,7 +3,7 @@ export default class Timeline{
         eventsArr.sort((a, b) => a - b);
         this.eventsArr = eventsArr;
         this.ctx = context;
-        this.xCord = 110;
+        this.xCord = 114;
         this.yCord = 250;
         this.width = 1000;
         this.height = 2;
