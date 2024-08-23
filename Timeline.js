@@ -123,8 +123,10 @@ export default class Timeline{
         this.drawQueue.pop();
         this.drawQueue.pop();
 
+        // this yCord is for the last line of text in the current drawQueue Event
         firstEvent.yCord = 230 - firstEvent.yShiftForDrawnEvent;
         this.drawQueue.push(firstEvent);
+        // this yCord is for the last line of text in the current drawQueue Event
         secondEvent.yCord = 230;
         this.drawQueue.push(secondEvent)
     }
