@@ -179,7 +179,6 @@ export default class Timeline{
         /* Based on the unitsPerPixel scale used, find which events fit 
         on the screen and therefore will be need to be displayed */
         this._setDrawQueue();
-        
         for(let i=0; i < this.drawQueue.length; i++){
             this._drawEvent(this.drawQueue[i]);
         }
