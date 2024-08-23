@@ -76,7 +76,7 @@ export default class TimelineEvent{
         this.lineHeight = 12;
         this.xCord = undefined;
         this.yCord = 230;
-        this.shiftForDrawnEventYCord = (5 * 15);
+        this.yShiftForDrawnEvent = (5 * 15);
     }
 
     returnElipsisObj(){

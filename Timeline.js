@@ -121,7 +121,7 @@ export default class Timeline{
         this.drawQueue.pop();
         this.drawQueue.pop();
 
-        firstEvent.yCord = 230 - firstEvent.shiftForDrawnEventYCord;
+        firstEvent.yCord = 230 - firstEvent.yShiftForDrawnEvent;
         this.drawQueue.push(firstEvent);
         secondEvent.yCord = 230;
         this.drawQueue.push(secondEvent)
@@ -141,7 +141,7 @@ export default class Timeline{
                 //for each drawQueue Event with the same xCord as currEvent shift yCord 
                 for(let i=this.drawQueue.length - 1; i >= indexOfFirstXCord; i--){
                     // this yCord is for the last line of text in the current drawQueue Event
-                    this.drawQueue[i].yCord = this.drawQueue[i].yCord - currEvent.shiftForDrawnEventYCord;
+                    this.drawQueue[i].yCord = this.drawQueue[i].yCord - currEvent.yShiftForDrawnEvent;
                 }
                 // this yCord is for the last line of text in the current drawQueue Event
                 currEvent.yCord = 230;
