@@ -32,7 +32,7 @@ const arrTimelineB = [  new TimelineEvent("blah", 1),
 let timelineB = new Timeline(contextB, arrTimelineB) 
 
 
-timelineA.setupComparedTimelinesForDrawing(timelineB);
+timelineA.setupComparedTimelines(timelineB);
 timelineA.drawTimeline();
 timelineB.drawTimeline();
 console.log(timelineA.eventsArr)

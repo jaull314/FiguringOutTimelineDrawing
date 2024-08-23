@@ -43,6 +43,7 @@ export default class Timeline{
 
     setNewUnitsPerPixel(unitsPerPixel){
         this.unitsPerPixel = unitsPerPixel;
+        this.maxUnitsPerPixel = unitsPerPixel;
         this.endOfVisibleTimeline = this.startOfVisibleTimeline + (this.width * this.unitsPerPixel);
     }
 
@@ -77,7 +78,7 @@ export default class Timeline{
         }
     }
 
-    setupComparedTimelinesForDrawing(otherTimeline){
+    setupComparedTimelines(otherTimeline){
         this.setEarliestEventForBothTimelines(otherTimeline);
         this.setLatestEventForBothTimelines(otherTimeline);
 
