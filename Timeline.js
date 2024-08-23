@@ -83,6 +83,7 @@ export default class Timeline{
 
         const unitsPerPixel = this.caclculateUnitsPerPixel(this.earliestEventOfTimeline, this.latestEventOfTimeline);
         this.unitsPerPixel = unitsPerPixel;
+        this.maxUnitsPerPixel = unitsPerPixel;
         otherTimeline.unitsPerPixel = unitsPerPixel;
         otherTimeline.maxUnitsPerPixel = unitsPerPixel;
 
@@ -181,7 +182,6 @@ export default class Timeline{
         for(let i=0; i < this.drawQueue.length; i++){
             this.drawEvent(this.drawQueue[i]);
         }
-        this.maxUnitsPerPixel = this.unitsPerPixel;
         console.log("unitsPerPixel: ", this.unitsPerPixel);
         console.log("startOfVisibleTimeline: ", this.startOfVisibleTimeline);
         console.log("endOfVisibleTimeline: ", this.endOfVisibleTimeline);
@@ -209,6 +209,7 @@ export default class Timeline{
 
     zoomOutForTimeline(){
         if(this.unitsPerPixel < this.maxUnitsPerPixel){
+            console.log("zoomOut")
             this.setNewUnitsPerPixel(this.unitsPerPixel * 10);
             this.drawTimeline();
         }

@@ -11,9 +11,9 @@ contextA.textAlign = "center";
 contextA.fillStyle = "red";
 
 const arrTimelineA = [  new TimelineEvent("blah", 0),
-                        new TimelineEvent("", 200), 
-                        new TimelineEvent("", 900), 
-                        new TimelineEvent("", 1500)];
+                        new TimelineEvent("Hello", 200), 
+                        new TimelineEvent("World", 900), 
+                        new TimelineEvent("Bye", 1500)];
 let timelineA = new Timeline(contextA, arrTimelineA)
 
 
@@ -26,9 +26,9 @@ contextB.textAlign = "center";
 contextB.fillStyle = "Blue";
 
 const arrTimelineB = [  new TimelineEvent("blah", 1),  
-                        new TimelineEvent("", 500), 
-                        new TimelineEvent("", 801), 
-                        new TimelineEvent("",9990)];
+                        new TimelineEvent("blha", 500), 
+                        new TimelineEvent("balh", 801), 
+                        new TimelineEvent("halb",9990)];
 let timelineB = new Timeline(contextB, arrTimelineB) 
 
 
