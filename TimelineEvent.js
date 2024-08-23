@@ -16,7 +16,7 @@ export default class TimelineEvent{
         let hyphensArr = splitArr;
         for(let i=1; i < hyphensArr.length; i++){
             let prevLine = hyphensArr[i - 1]
-            if(!(prevLine[prevLine.length - 1] === " " || hyphensArr[i][0] === " ")){
+            if(prevLine[prevLine.length - 1] !== " " && hyphensArr[i][0] !== " "){
                 hyphensArr[i - 1] = prevLine + "-"
             }
         }

@@ -25,7 +25,7 @@ contextB.font = "575 12px serif";
 contextB.textAlign = "center";
 contextB.fillStyle = "Blue";
 
-const arrTimelineB = [  new TimelineEvent("blah", 1),  
+const arrTimelineB = [  new TimelineEvent("123456789012345 blah", 1),  
                         new TimelineEvent("blha", 1), 
                         new TimelineEvent("balh", 1), 
                         new TimelineEvent("halb",9990)];
