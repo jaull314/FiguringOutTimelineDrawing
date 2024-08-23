@@ -117,11 +117,20 @@ export default class Timeline{
         }
     }
 
+    replaceLastTwoDrawnEventsWith(firstEvent, secondEvent){
+        this.drawQueue.pop();
+        this.drawQueue.pop();
+
+        firstEvent.yCord = 230 - firstEvent.shiftForDrawnEventYCord;
+        this.drawQueue.push(firstEvent);
+        secondEvent.yCord = 230;
+        this.drawQueue.push(secondEvent)
+    }
+
     setDrawQueue(){
         this.drawQueue = [];
         let lastXCord = undefined;
         let numWithXCord = 0;
-        const shiftForDrawnEventYCord = (5 * 15);
         for(let i=0; i < this.visiblePartOfTimeline.length; i++){
             let currEvent = this.visiblePartOfTimeline[i];
             numWithXCord = (currEvent.xCord !== lastXCord) ? 1 : numWithXCord + 1;
@@ -129,10 +138,10 @@ export default class Timeline{
             if(numWithXCord <= 3){
                 let numXCordAlreadyInQueue = (numWithXCord - 1);
                 let indexOfFirstXCord = this.drawQueue.length - numXCordAlreadyInQueue;
-                //shift yCord for each drawQueue Event with the same xCord as visibleTimeline[i]
+                //for each drawQueue Event with the same xCord as currEvent shift yCord 
                 for(let i=this.drawQueue.length - 1; i >= indexOfFirstXCord; i--){
                     // this yCord is for the last line of text in the current drawQueue Event
-                    this.drawQueue[i].yCord = this.drawQueue[i].yCord - shiftForDrawnEventYCord;
+                    this.drawQueue[i].yCord = this.drawQueue[i].yCord - currEvent.shiftForDrawnEventYCord;
                 }
                 // this yCord is for the last line of text in the current drawQueue Event
                 currEvent.yCord = 230;
@@ -140,17 +149,8 @@ export default class Timeline{
                 //drawQueue.push([xCord, 230, eventTitleAndTime])
 
             }else{
-                this.drawQueue.pop();
-                this.drawQueue.pop();
-
-                let elipsisObj = currEvent.returnElipsisObj();
-                elipsisObj.yCord = 230 - shiftForDrawnEventYCord;
-                this.drawQueue.push(elipsisObj);
-
-                // this yCord is for the last line of text in the current drawQueue Event
-                currEvent.yCord = 230;
-                this.drawQueue.push(currEvent);
-                //drawQueue.push([xCord, 230, eventTitleAndTime])
+                let elipsisEvent = currEvent.returnElipsisObj();
+                this.replaceLastTwoDrawnEventsWith(elipsisEvent, currEvent);
             }
             lastXCord = currEvent.xCord;  
         }
