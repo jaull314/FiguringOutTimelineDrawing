@@ -31,7 +31,7 @@ export default class Timeline{
         this.drawQueue = [];
     }
 
-    caclculateUnitsPerPixel(minEvent, maxEvent){
+    _caclculateUnitsPerPixel(minEvent, maxEvent){
         if(maxEvent > minEvent){
             let timelineRange = maxEvent - minEvent;
             let logOfRange = Math.floor(Math.log10(timelineRange));
@@ -47,7 +47,7 @@ export default class Timeline{
     }
 
     //==================This section is only needed for comparing Timelines==========================================
-    setEarliestEventForBothTimelines(otherTimeline){
+    _setEarliestEventForBothTimelines(otherTimeline){
         if(this.earliestEventOfTimeline === undefined && otherTimeline.earliestEventOfTimeline !== undefined){
             this.earliestEventOfTimeline = otherTimeline.earliestEventOfTimeline;
 
@@ -62,7 +62,7 @@ export default class Timeline{
         }
     }
 
-    setLatestEventForBothTimelines(otherTimeline){
+    _setLatestEventForBothTimelines(otherTimeline){
         if(this.latestEventOfTimeline === undefined && otherTimeline.latestEventOfTimeline !== undefined){
             this.latestEventOfTimeline = otherTimeline.latestEventOfTimeline;
 
@@ -78,10 +78,10 @@ export default class Timeline{
     }
 
     setupComparedTimelines(otherTimeline){
-        this.setEarliestEventForBothTimelines(otherTimeline);
-        this.setLatestEventForBothTimelines(otherTimeline);
+        this._setEarliestEventForBothTimelines(otherTimeline);
+        this._setLatestEventForBothTimelines(otherTimeline);
 
-        const unitsPerPixel = this.caclculateUnitsPerPixel(this.earliestEventOfTimeline, this.latestEventOfTimeline);
+        const unitsPerPixel = this._caclculateUnitsPerPixel(this.earliestEventOfTimeline, this.latestEventOfTimeline);
         this.unitsPerPixel = unitsPerPixel;
         this.maxUnitsPerPixel = unitsPerPixel;
         otherTimeline.unitsPerPixel = unitsPerPixel;
@@ -95,30 +95,30 @@ export default class Timeline{
     }
     //===========================================================================================================
     
-    roundPixelXCordToNearestHundred(xCord){
+    _roundPixelXCordToNearestHundred(xCord){
         return Math.round(xCord / 100) * 100;
     }
 
-    getXCordForEvent(event){
+    _getXCordForEvent(event){
         const distanceFromTimelineStart = event.timeOfEvent - this.startOfVisibleTimeline
         return Math.floor(distanceFromTimelineStart / this.unitsPerPixel)
     }
 
     
-    setVisiblePartOfTimeline(){
+    _setVisiblePartOfTimeline(){
         if(this.eventsArr.length == 0) return;
         this.visiblePartOfTimeline = [];
         let currEvent;
         for(let i=0; i < this.eventsArr.length; i++){
             currEvent = this.eventsArr[i]
             if(currEvent.timeOfEvent >= this.startOfVisibleTimeline && currEvent.timeOfEvent <= this.endOfVisibleTimeline){
-                currEvent.xCord = this.getXCordForEvent(currEvent);
+                currEvent.xCord = this._getXCordForEvent(currEvent);
                 this.visiblePartOfTimeline.push(currEvent)
             }
         }
     }
 
-    replaceLastTwoDrawnEventsWith(firstEvent, secondEvent){
+    _replaceLastTwoDrawnEventsWith(firstEvent, secondEvent){
         this.drawQueue.pop();
         this.drawQueue.pop();
 
@@ -128,7 +128,7 @@ export default class Timeline{
         this.drawQueue.push(secondEvent)
     }
 
-    setDrawQueue(){
+    _setDrawQueue(){
         this.drawQueue = [];
         let lastXCord = undefined;
         let numWithXCord = 0;
@@ -150,14 +150,14 @@ export default class Timeline{
                 //drawQueue.push([xCord, 230, eventTitleAndTime])
 
             }else{
-                let elipsisEvent = currEvent.returnElipsisObj();
-                this.replaceLastTwoDrawnEventsWith(elipsisEvent, currEvent);
+                let elipsisEvent = currEvent._returnElipsisObj();
+                this._replaceLastTwoDrawnEventsWith(elipsisEvent, currEvent);
             }
             lastXCord = currEvent.xCord;  
         }
     }
 
-    drawEvent(currEvent){
+    _drawEvent(currEvent){
         let currYCord = currEvent.yCord - currEvent.lineHeight;
         for(let i=currEvent.titleAndTime.length - 1; i >= 0; i--){
             this.ctx.fillText(currEvent.titleAndTime[i], this.xCord + currEvent.xCord, currYCord)
@@ -176,11 +176,11 @@ export default class Timeline{
         this.ctx.fillRect(this.xCord, this.yCord, this.width, this.height);
         /* Based on the unitsPerPixel scale used, find which events fit 
         on the screen and therefore will be need to be displayed */
-        this.setVisiblePartOfTimeline();
-        this.setDrawQueue();
+        this._setVisiblePartOfTimeline();
+        this._setDrawQueue();
         
         for(let i=0; i < this.drawQueue.length; i++){
-            this.drawEvent(this.drawQueue[i]);
+            this._drawEvent(this.drawQueue[i]);
         }
         console.log("unitsPerPixel: ", this.unitsPerPixel);
         console.log("startOfVisibleTimeline: ", this.startOfVisibleTimeline);

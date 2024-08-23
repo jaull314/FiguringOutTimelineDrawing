@@ -1,5 +1,5 @@
 export default class TimelineEvent{
-    splitTitleOrTimeArr(str){
+    _splitTitleOrTimeArr(str){
         let splitArr = []
         let currLine = "";
         for(let i=0; i < str.length; i++){
@@ -12,7 +12,7 @@ export default class TimelineEvent{
         return splitArr;
     }
     
-    addHyphensToTitleOrTimeArr(splitArr){
+    _addHyphensToTitleOrTimeArr(splitArr){
         let hyphensArr = splitArr;
         for(let i=1; i < hyphensArr.length; i++){
             let prevLine = hyphensArr[i - 1]
@@ -23,7 +23,7 @@ export default class TimelineEvent{
         return hyphensArr;
     }
     
-    trimTitleOrTimeArr(hyphensArr){
+    _trimTitleOrTimeArr(hyphensArr){
         let trimmedArr = hyphensArr;
         for(let i=0; i < trimmedArr.length; i++){
             let currLine = trimmedArr[i];
@@ -32,7 +32,7 @@ export default class TimelineEvent{
         return trimmedArr;
     }
     
-    sliceArrAndAddElipsis(maxNumOfLines, trimmedArr){
+    _sliceArrAndAddElipsis(maxNumOfLines, trimmedArr){
         /* the title should take up to a maximum of 3 lines and 
         the time should take to up a maximum of 2 lines */
         let elipsisArr = trimmedArr;
@@ -49,17 +49,17 @@ export default class TimelineEvent{
     }
     
     setFormattedTitleAndTime(titleStr, timeStr){
-        let formattedTitle = this.splitTitleOrTimeArr(titleStr)
-        formattedTitle = this.addHyphensToTitleOrTimeArr(formattedTitle);
-        formattedTitle = this.trimTitleOrTimeArr(formattedTitle);
-        //    sliceArrAndAddElipsis(maxNumOfLines, trimmedArrFromEitherTitleOrTime)
-        formattedTitle = this.sliceArrAndAddElipsis(3, formattedTitle);
+        let formattedTitle = this._splitTitleOrTimeArr(titleStr)
+        formattedTitle = this._addHyphensToTitleOrTimeArr(formattedTitle);
+        formattedTitle = this._trimTitleOrTimeArr(formattedTitle);
+        //    _sliceArrAndAddElipsis(maxNumOfLines, trimmedArrFromEitherTitleOrTime)
+        formattedTitle = this._sliceArrAndAddElipsis(3, formattedTitle);
     
-        let formattedTime = this.splitTitleOrTimeArr(timeStr)
-        formattedTime = this.addHyphensToTitleOrTimeArr(formattedTime);
-        formattedTime = this.trimTitleOrTimeArr(formattedTime);
-        //    sliceArrAndAddElipsis(maxNumOfLines, trimmedArrFromEitherTitleOrTime)
-        formattedTime = this.sliceArrAndAddElipsis(2, formattedTime);
+        let formattedTime = this._splitTitleOrTimeArr(timeStr)
+        formattedTime = this._addHyphensToTitleOrTimeArr(formattedTime);
+        formattedTime = this._trimTitleOrTimeArr(formattedTime);
+        //    _sliceArrAndAddElipsis(maxNumOfLines, trimmedArrFromEitherTitleOrTime)
+        formattedTime = this._sliceArrAndAddElipsis(2, formattedTime);
     
         let formattedTitleAndTime = formattedTitle;
         for(let i=0; i < formattedTime.length; i++){
@@ -79,7 +79,7 @@ export default class TimelineEvent{
         this.yShiftForDrawnEvent = (5 * 15);
     }
 
-    returnElipsisObj(){
+    _returnElipsisObj(){
         let elipsisPlaceHolder = [];
         // change 5 to this.maxNumOfLinesForTitleAndTime
         for(let i=0; i < (this.maxNumLinesForTime + this.maxNumLinesForTitle); i++){
