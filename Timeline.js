@@ -42,11 +42,6 @@ export default class Timeline{
         }
     }
 
-    _setNewUnitsPerPixel(unitsPerPixel){
-        this._unitsPerPixel = unitsPerPixel;
-        this._endOfVisibleTimeline = this._startOfVisibleTimeline + (this._width * this._unitsPerPixel);
-    }
-
     //==================This section is only needed for comparing Timelines==========================================
     _setEarliestEventForBothTimelines(otherTimeline){
         if(this._earliestEventOfTimeline === undefined && otherTimeline._earliestEventOfTimeline !== undefined){
@@ -208,17 +203,17 @@ export default class Timeline{
     }
 
     zoomOutForTimeline(){
-        console.log("this.unitsPerPixel", this._unitsPerPixel)
-        console.log("this.maxUnitsPerPixel", this._maxUnitsPerPixel)
         if(this._unitsPerPixel < this._maxUnitsPerPixel){
-            this._setNewUnitsPerPixel(this._unitsPerPixel * 10);
+            this._unitsPerPixel = this._unitsPerPixel * 10;
+            this._endOfVisibleTimeline = this._startOfVisibleTimeline + (this._width * this._unitsPerPixel);
             this.drawTimeline();
         }
     }
 
     zoomInForTimeline(){
         if(this._unitsPerPixel > this._minUnitsPerPixel){
-            this._setNewUnitsPerPixel(this._unitsPerPixel / 10);
+            this._unitsPerPixel = this._unitsPerPixel / 10;
+            this._endOfVisibleTimeline = this._startOfVisibleTimeline + (this._width * this._unitsPerPixel);
             this.drawTimeline();
         }
     }
