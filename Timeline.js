@@ -1,3 +1,5 @@
+import TimelineEvent  from "./TimelineEvent.js";
+
 export default class Timeline{
     constructor(context, eventsArr){
         eventsArr.sort((a, b) => a - b);
@@ -153,6 +155,11 @@ export default class Timeline{
         }
     }
 
+    _drawVisibleStartAndEndTimes(){
+        this.ctx.fillText(this._startOfVisibleTimeline.toString(), 70, this._yCord + 5);
+        this.ctx.fillText(this._endOfVisibleTimeline.toString(), this._xCord + this._width + 50, this._yCord + 5);
+    }
+
     _drawEvent(currEvent){
         let currYCord = currEvent.yCord - currEvent.lineHeight;
         for(let i=currEvent.titleAndTime.length - 1; i >= 0; i--){
@@ -162,7 +169,6 @@ export default class Timeline{
         // theis vertical line tick is 1 pixel wide and 44 pixels tall 
         //                              (x,                  y,                width, height) 
         this.ctx.fillRect(this._xCord + currEvent.xCord, this._timelineTickYCord, 1, 42);
-
     }
     
     drawTimeline(){
@@ -177,6 +183,7 @@ export default class Timeline{
         for(let i=0; i < this._drawQueue.length; i++){
             this._drawEvent(this._drawQueue[i]);
         }
+        this._drawVisibleStartAndEndTimes();
         console.log("unitsPerPixel: ", this._unitsPerPixel);
         console.log("startOfVisibleTimeline: ", this._startOfVisibleTimeline);
         console.log("endOfVisibleTimeline: ", this._endOfVisibleTimeline);
