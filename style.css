@@ -1,11 +1,17 @@
 #canvasA, #canvasB{  
     display: block;
-    border: 2px solid #000000;
+    /*border: 2px solid #000000; */
     margin: 1vh auto;
 
 }
 
+#buttonContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
 #scrollLeft, #scrollRight, #zoomOut, #zoomIn {
-    height: 4vw;
+    height: 2vw;
     width: 4vw;
 }
