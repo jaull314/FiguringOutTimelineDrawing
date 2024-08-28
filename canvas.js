@@ -10,10 +10,10 @@ contextA.font = "575 12px serif";
 contextA.textAlign = "center";
 contextA.fillStyle = "red";
 
-const arrTimelineA = [  new TimelineEvent("blah", 0),
-                        new TimelineEvent("Hello", 200), 
-                        new TimelineEvent("World", 900), 
-                        new TimelineEvent("Bye", 1500)];
+const arrTimelineA = [  new TimelineEvent("Declaration Of Independence", 1776),
+                        new TimelineEvent("Treaty of Paris", 1783), 
+                        new TimelineEvent("Start of Civil War", 1861), 
+                        new TimelineEvent("End of Civil War", 1865)];
 let timelineA = new Timeline(contextA, arrTimelineA)
 
 
@@ -25,10 +25,9 @@ contextB.font = "575 12px serif";
 contextB.textAlign = "center";
 contextB.fillStyle = "Blue";
 
-const arrTimelineB = [  new TimelineEvent("123456789012345 blah", 1),  
-                        new TimelineEvent("blha", 1), 
-                        new TimelineEvent("balh", 1), 
-                        new TimelineEvent("halb",9990)];
+const arrTimelineB = [  new TimelineEvent("French Revolution", 1789),
+                        new TimelineEvent("Coup of 18 Brumaire", 1799),
+                        new TimelineEvent("Napoleon defeated in Warerloo", 1815)];
 let timelineB = new Timeline(contextB, arrTimelineB) 
 
 

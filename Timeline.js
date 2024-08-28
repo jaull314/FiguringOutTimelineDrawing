@@ -134,7 +134,7 @@ export default class Timeline{
             let currEvent = this._visiblePartOfTimeline[i];
             // this yCord is for the last line of text in the current drawQueue Event
             currEvent.yCord = 230;
-            currEvent.xCord = this._getXCordForEvent(currEvent);
+            currEvent.xCord = this._roundPixelXCordToNearestHundred(this._getXCordForEvent(currEvent));
             numWithXCord = (currEvent.xCord !== lastXCord) ? 1 : numWithXCord + 1;
 
             if(numWithXCord <= 3){
@@ -161,11 +161,14 @@ export default class Timeline{
     }
 
     _drawEvent(currEvent){
+        const savedColor = this.ctx.fillStyle;
+        this.ctx.fillStyle = "black";
         let currYCord = currEvent.yCord - currEvent.lineHeight;
         for(let i=currEvent.titleAndTime.length - 1; i >= 0; i--){
             this.ctx.fillText(currEvent.titleAndTime[i], this._xCord + currEvent.xCord, currYCord)
             currYCord -= currEvent.lineHeight;
         }
+        this.ctx.fillStyle = savedColor;
         // theis vertical line tick is 1 pixel wide and 44 pixels tall 
         //                              (x,                  y,                width, height) 
         this.ctx.fillRect(this._xCord + currEvent.xCord, this._timelineTickYCord, 1, 42);
