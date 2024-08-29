@@ -48,18 +48,18 @@ export default class TimelineEvent{
         return elipsisArr;
     }
     
-    setFormattedTitleAndTime(titleStr, timeStr){
+    setFormattedTitleAndTime(maxNumLinesForTitle, titleStr, maxNumLinesForTime, timeStr){
         let formattedTitle = this._splitTitleOrTimeArr(titleStr)
         formattedTitle = this._addHyphensToTitleOrTimeArr(formattedTitle);
         formattedTitle = this._trimTitleOrTimeArr(formattedTitle);
         //    _sliceArrAndAddElipsis(maxNumOfLines, trimmedArrFromEitherTitleOrTime)
-        formattedTitle = this._sliceArrAndAddElipsis(3, formattedTitle);
+        formattedTitle = this._sliceArrAndAddElipsis(maxNumLinesForTitle, formattedTitle);
     
         let formattedTime = this._splitTitleOrTimeArr(timeStr)
         formattedTime = this._addHyphensToTitleOrTimeArr(formattedTime);
         formattedTime = this._trimTitleOrTimeArr(formattedTime);
         //    _sliceArrAndAddElipsis(maxNumOfLines, trimmedArrFromEitherTitleOrTime)
-        formattedTime = this._sliceArrAndAddElipsis(2, formattedTime);
+        formattedTime = this._sliceArrAndAddElipsis(maxNumLinesForTime, formattedTime);
     
         let formattedTitleAndTime = formattedTitle;
         for(let i=0; i < formattedTime.length; i++){
@@ -72,20 +72,21 @@ export default class TimelineEvent{
         this._title = titleStr;
         this.timeOfEvent = timeOfEvent;
         this._lineLength = 12;
-        this.titleAndTime = this.setFormattedTitleAndTime(titleStr, timeOfEvent.toString());
+        const titleMaxNumLines = 3;
+        const timeMaxNumLines = 2;
+        this.titleAndTime = this.setFormattedTitleAndTime(titleMaxNumLines, titleStr, timeMaxNumLines, timeOfEvent.toString());
+        this.totalMaxNumLines = titleMaxNumLines + timeMaxNumLines;
         this.lineHeight = 12;
         this.xCord = undefined;
         this.yCord = 230;
         this.yShiftForDrawnEvent = (5 * 15);
-        this.maxNumLinesForTitle = 3;
-        this.maxNumLinesForTime = 2;
     }
 
     returnElipsisObj(){
         let elipsisObj = new TimelineEvent(this._title, this.timeOfEvent);
         let elipsisPlaceHolder = [];
         // change 5 to this.maxNumOfLinesForTitleAndTime
-        for(let i=0; i < (this.maxNumLinesForTime + this.maxNumLinesForTitle); i++){
+        for(let i=0; i < this.totalMaxNumLines; i++){
             if(i > 0 && i < 4){
                 elipsisPlaceHolder.push(".");
             }else{
