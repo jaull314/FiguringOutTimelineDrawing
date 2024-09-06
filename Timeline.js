@@ -1,4 +1,5 @@
 import TimelineEvent  from "./TimelineEvent.js";
+import * as TimelineScale from "./TimelineScale.js"
 
 export default class Timeline{
     constructor(context, eventsArr){
@@ -22,10 +23,9 @@ export default class Timeline{
         this._startOfVisibleTimeline =  undefined;
         this._endOfVisibleTimeline = undefined;
         if(eventsArr.length > 1){
-            let timelineRange = eventsArr[eventsArr.length - 1].timeOfEvent - eventsArr[0].timeOfEvent;
-            let logOfRange = Math.floor(Math.log10(timelineRange));
-            this._unitsPerPixel = 10 ** (logOfRange - 2);
-            this._maxUnitsPerPixel = 10 ** (logOfRange - 2);
+            let unitsPerPixel = TimelineScale.calculateUnitsPerPixel(eventsArr[0].timeOfEvent, eventsArr[eventsArr.length - 1].timeOfEvent);
+            this._unitsPerPixel = unitsPerPixel;
+            this._maxUnitsPerPixel = unitsPerPixel;
         }
         if(eventsArr.length > 0){
             this._startOfVisibleTimeline =  eventsArr[0].timeOfEvent;
@@ -34,15 +34,6 @@ export default class Timeline{
         this._drawQueue = [];
     }
 
-    _calculateUnitsPerPixel(minEvent, maxEvent){
-        if(maxEvent > minEvent){
-            let timelineRange = maxEvent - minEvent;
-            let logOfRange = Math.floor(Math.log10(timelineRange));
-            return 10 ** (logOfRange - 2);
-        }else{
-            return 1;
-        }
-    }
 
     //==================This section is only needed for comparing Timelines==========================================
     _setEarliestEventForBothTimelines(otherTimeline){
@@ -79,7 +70,7 @@ export default class Timeline{
         this._setEarliestEventForBothTimelines(otherTimeline);
         this._setLatestEventForBothTimelines(otherTimeline);
 
-        const unitsPerPixel = this._calculateUnitsPerPixel(this._earliestEventOfTimeline, this._latestEventOfTimeline);
+        const unitsPerPixel = TimelineScale.calculateUnitsPerPixel(this._earliestEventOfTimeline, this._latestEventOfTimeline);
         this._unitsPerPixel = unitsPerPixel;
         this._maxUnitsPerPixel = unitsPerPixel;
         otherTimeline._unitsPerPixel = unitsPerPixel;
