@@ -15,7 +15,7 @@ export default class Timeline{
         displayed portion of the timeline */
         this._earliestEventOfTimeline = (eventsArr.length > 0) ? eventsArr[0].timeOfEvent : undefined;
         this._latestEventOfTimeline = (eventsArr.length > 0) ? eventsArr[eventsArr.length - 1].timeOfEvent : undefined;
-        this._visiblePartOfTimeline= [];
+        this.visiblePartOfTimeline= [];
         this._unitsPerPixel = 1;
         this._maxUnitsPerPixel = 1;
         this._minUnitsPerPixel = .01;
@@ -95,12 +95,12 @@ export default class Timeline{
     
     _setVisiblePartOfTimeline(){
         if(this.eventsArr.length == 0) return;
-        this._visiblePartOfTimeline = [];
+        this.visiblePartOfTimeline = [];
         let currEvent;
         for(let i=0; i < this.eventsArr.length; i++){
             currEvent = this.eventsArr[i]
             if(currEvent.timeOfEvent >= this._startOfVisibleTimeline && currEvent.timeOfEvent <= this._endOfVisibleTimeline){
-                this._visiblePartOfTimeline.push(currEvent)
+                this.visiblePartOfTimeline.push(currEvent)
             }
         }
     }
@@ -120,8 +120,8 @@ export default class Timeline{
         this._drawQueue = [];
         let lastXCord = undefined;
         let numWithXCord = 0;
-        for(let i=0; i < this._visiblePartOfTimeline.length; i++){
-            let currEvent = this._visiblePartOfTimeline[i];
+        for(let i=0; i < this.visiblePartOfTimeline.length; i++){
+            let currEvent = this.visiblePartOfTimeline[i];
             // this yCord is for the last line of text in the current drawQueue Event
             currEvent.yCord = 230;
             currEvent.xCord = this._roundPixelXCordToNearestHundred(this._getXCordForEvent(currEvent));
