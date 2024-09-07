@@ -14,7 +14,7 @@ const arrTimelineA = [  new TimelineEvent("Declaration Of Independence", 1776),
                         new TimelineEvent("Treaty of Paris", 1783), 
                         new TimelineEvent("Start of Civil War", 1861), 
                         new TimelineEvent("End of Civil War", 1865)];
-let timelineA = new Timeline(contextA, arrTimelineA)
+let timelineA = new Timeline(arrTimelineA)
 
 
 const canvasB = document.getElementById('canvasB');
@@ -28,34 +28,34 @@ contextB.fillStyle = "Blue";
 const arrTimelineB = [  new TimelineEvent("French Revolution", 1789),
                         new TimelineEvent("Coup of 18 Brumaire", 1799),
                         new TimelineEvent("Napoleon defeated in Warerloo", 1815)];
-let timelineB = new Timeline(contextB, arrTimelineB) 
+let timelineB = new Timeline(arrTimelineB) 
 
 
 timelineA.setupComparedTimelines(timelineB);
-timelineA.drawTimeline();
-timelineB.drawTimeline();
+timelineA.drawTimeline(contextA);
+timelineB.drawTimeline(contextB);
 console.log(timelineA.eventsArr)
 
 const scrollLeftButton = document.getElementById("scrollLeft")
 scrollLeftButton.addEventListener("click", function(e){
-    timelineA.scrollLeftForTimeline();
-    timelineB.scrollLeftForTimeline();
+    timelineA.scrollLeftForTimeline(contextA);
+    timelineB.scrollLeftForTimeline(contextB);
 })
 
 const scrollRightButton = document.getElementById("scrollRight")
 scrollRightButton.addEventListener("click", function(e){
-    timelineA.scrollRightForTimeline();
-    timelineB.scrollRightForTimeline();
+    timelineA.scrollRightForTimeline(contextA);
+    timelineB.scrollRightForTimeline(contextB);
 })
 
 const zoomOutButton = document.getElementById("zoomOut")
 zoomOutButton.addEventListener("click", function(e){
-    timelineA.zoomOutForTimeline();
-    timelineB.zoomOutForTimeline();
+    timelineA.zoomOutForTimeline(contextA);
+    timelineB.zoomOutForTimeline(contextB);
 })
 
 const zoomInButton = document.getElementById("zoomIn")
 zoomInButton.addEventListener("click", function(e){
-    timelineA.zoomInForTimeline();
-    timelineB.zoomInForTimeline();
+    timelineA.zoomInForTimeline(contextA);
+    timelineB.zoomInForTimeline(contextB);
 })

@@ -2,10 +2,9 @@ import TimelineEvent  from "./TimelineEvent.js";
 import * as TimelineScale from "./TimelineScale.js"
 
 export default class Timeline{
-    constructor(context, eventsArr){
+    constructor(eventsArr){
         eventsArr.sort((a, b) => a - b);
         this.eventsArr = eventsArr;
-        this.ctx = context;
         this._xCord = 114;
         this._yCord = 250;
         this._width = 1000;
@@ -146,76 +145,76 @@ export default class Timeline{
         }
     }
 
-    _drawVisibleStartAndEndTimes(){
-        this.ctx.fillText(this._startOfVisibleTimeline.toString(), 70, this._yCord + 5);
-        this.ctx.fillText(this._endOfVisibleTimeline.toString(), this._xCord + this._width + 50, this._yCord + 5);
+    _drawVisibleStartAndEndTimes(ctx){
+        ctx.fillText(this._startOfVisibleTimeline.toString(), 70, this._yCord + 5);
+        ctx.fillText(this._endOfVisibleTimeline.toString(), this._xCord + this._width + 50, this._yCord + 5);
     }
 
-    _drawEvent(currEvent){
-        const savedColor = this.ctx.fillStyle;
-        this.ctx.fillStyle = "black";
+    _drawEvent(ctx, currEvent){
+        const savedColor = ctx.fillStyle;
+        ctx.fillStyle = "black";
         let currYCord = currEvent.yCord - currEvent.lineHeight;
         for(let i=currEvent.titleAndTime.length - 1; i >= 0; i--){
-            this.ctx.fillText(currEvent.titleAndTime[i], this._xCord + currEvent.xCord, currYCord)
+            ctx.fillText(currEvent.titleAndTime[i], this._xCord + currEvent.xCord, currYCord)
             currYCord -= currEvent.lineHeight;
         }
-        this.ctx.fillStyle = savedColor;
+        ctx.fillStyle = savedColor;
         // theis vertical line tick is 1 pixel wide and 44 pixels tall 
         //                              (x,                  y,                width, height) 
-        this.ctx.fillRect(this._xCord + currEvent.xCord, this._timelineTickYCord, 1, 42);
+        ctx.fillRect(this._xCord + currEvent.xCord, this._timelineTickYCord, 1, 42);
     }
     
-    drawTimeline(){
+    drawTimeline(ctx){
         // erase what's currently on the canvas before drawing the new timeline
-        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         /* draw main horizontal line of timeline
                         (x,  y, width, height)                              */
-        this.ctx.fillRect(this._xCord, this._yCord, this._width, this._height);
+        ctx.fillRect(this._xCord, this._yCord, this._width, this._height);
         /* Based on the unitsPerPixel scale used, find which events fit 
         on the screen and therefore will be need to be displayed */
         this._setDrawQueue();
         for(let i=0; i < this._drawQueue.length; i++){
-            this._drawEvent(this._drawQueue[i]);
+            this._drawEvent(ctx, this._drawQueue[i]);
         }
-        this._drawVisibleStartAndEndTimes();
+        this._drawVisibleStartAndEndTimes(ctx);
         console.log("unitsPerPixel: ", this._unitsPerPixel);
         console.log("startOfVisibleTimeline: ", this._startOfVisibleTimeline);
         console.log("endOfVisibleTimeline: ", this._endOfVisibleTimeline);
         console.log("===============================================")
     }
 
-    scrollLeftForTimeline(){
+    scrollLeftForTimeline(ctx){
         if(this._startOfVisibleTimeline > this._earliestEventOfTimeline){
             this._startOfVisibleTimeline = this._startOfVisibleTimeline -  (this._width * this._unitsPerPixel);
             if(this._startOfVisibleTimeline < this._earliestEventOfTimeline){
                 this._startOfVisibleTimeline = this._earliestEventOfTimeline;
             }
             this._endOfVisibleTimeline = this._startOfVisibleTimeline + (this._width * this._unitsPerPixel);
-            this.drawTimeline()
+            this.drawTimeline(ctx)
         }
     }
 
-    scrollRightForTimeline(){
+    scrollRightForTimeline(ctx){
         if(this._endOfVisibleTimeline < this._latestEventOfTimeline){
             this._startOfVisibleTimeline = this._endOfVisibleTimeline;
             this._endOfVisibleTimeline = this._startOfVisibleTimeline + (this._width * this._unitsPerPixel);
-            this.drawTimeline()
+            this.drawTimeline(ctx)
         }
     }
 
-    zoomOutForTimeline(){
+    zoomOutForTimeline(ctx){
         if(this._unitsPerPixel < this._maxUnitsPerPixel){
             this._unitsPerPixel = this._unitsPerPixel * 10;
             this._endOfVisibleTimeline = this._startOfVisibleTimeline + (this._width * this._unitsPerPixel);
-            this.drawTimeline();
+            this.drawTimeline(ctx);
         }
     }
 
-    zoomInForTimeline(){
+    zoomInForTimeline(ctx){
         if(this._unitsPerPixel > this._minUnitsPerPixel){
             this._unitsPerPixel = this._unitsPerPixel / 10;
             this._endOfVisibleTimeline = this._startOfVisibleTimeline + (this._width * this._unitsPerPixel);
-            this.drawTimeline();
+            this.drawTimeline(ctx);
         }
     }
 
