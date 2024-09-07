@@ -38,24 +38,32 @@ console.log(timelineA.eventsArr)
 
 const scrollLeftButton = document.getElementById("scrollLeft")
 scrollLeftButton.addEventListener("click", function(e){
-    timelineA.scrollLeftForTimeline(contextA);
-    timelineB.scrollLeftForTimeline(contextB);
+    timelineA.scrollLeftForTimeline();
+    timelineA.drawTimeline(contextA)
+    timelineB.scrollLeftForTimeline();
+    timelineB.drawTimeline(contextB)
 })
 
 const scrollRightButton = document.getElementById("scrollRight")
 scrollRightButton.addEventListener("click", function(e){
-    timelineA.scrollRightForTimeline(contextA);
-    timelineB.scrollRightForTimeline(contextB);
+    timelineA.scrollRightForTimeline();
+    timelineA.drawTimeline(contextA);
+    timelineB.scrollRightForTimeline();
+    timelineB.drawTimeline(contextB);
 })
 
 const zoomOutButton = document.getElementById("zoomOut")
 zoomOutButton.addEventListener("click", function(e){
-    timelineA.zoomOutForTimeline(contextA);
-    timelineB.zoomOutForTimeline(contextB);
+    timelineA.zoomOutForTimeline();
+    timelineA.drawTimeline(contextA);
+    timelineB.zoomOutForTimeline();
+    timelineB.drawTimeline(contextB);
 })
 
 const zoomInButton = document.getElementById("zoomIn")
 zoomInButton.addEventListener("click", function(e){
-    timelineA.zoomInForTimeline(contextA);
-    timelineB.zoomInForTimeline(contextB);
+    timelineA.zoomInForTimeline();
+    timelineA.drawTimeline(contextA);
+    timelineB.zoomInForTimeline();
+    timelineB.drawTimeline(contextB);
 })

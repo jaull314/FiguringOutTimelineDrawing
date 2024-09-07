@@ -1,4 +1,3 @@
-import TimelineEvent  from "./TimelineEvent.js";
 import * as TimelineScale from "./TimelineScale.js"
 
 export default class Timeline{
@@ -15,20 +14,21 @@ export default class Timeline{
         displayed portion of the timeline */
         this._earliestEventOfTimeline = (eventsArr.length > 0) ? eventsArr[0].timeOfEvent : undefined;
         this._latestEventOfTimeline = (eventsArr.length > 0) ? eventsArr[eventsArr.length - 1].timeOfEvent : undefined;
-        this.visiblePartOfTimeline= [];
         this._unitsPerPixel = 1;
         this._maxUnitsPerPixel = 1;
         this._minUnitsPerPixel = .01;
+        if(eventsArr.length > 1){
+            this._unitsPerPixel = TimelineScale.calculateUnitsPerPixel(eventsArr[0].timeOfEvent, eventsArr[eventsArr.length - 1].timeOfEvent);
+            this._maxUnitsPerPixel = this._unitsPerPixel
+        }
+        this.visiblePartOfTimeline = [];
         this._startOfVisibleTimeline =  undefined;
         this._endOfVisibleTimeline = undefined;
-        if(eventsArr.length > 1){
-            let unitsPerPixel = TimelineScale.calculateUnitsPerPixel(eventsArr[0].timeOfEvent, eventsArr[eventsArr.length - 1].timeOfEvent);
-            this._unitsPerPixel = unitsPerPixel;
-            this._maxUnitsPerPixel = unitsPerPixel;
-        }
         if(eventsArr.length > 0){
             this._startOfVisibleTimeline =  eventsArr[0].timeOfEvent;
             this._endOfVisibleTimeline = this._startOfVisibleTimeline + (this._width * this._unitsPerPixel);
+            this._setVisiblePartOfTimeline();
+            console.log("setting", this.visiblePartOfTimeline)
         }
         this._drawQueue = [];
     }
@@ -94,11 +94,9 @@ export default class Timeline{
 
     
     _setVisiblePartOfTimeline(){
-        if(this.eventsArr.length == 0) return;
         this.visiblePartOfTimeline = [];
-        let currEvent;
         for(let i=0; i < this.eventsArr.length; i++){
-            currEvent = this.eventsArr[i]
+            let currEvent = this.eventsArr[i]
             if(currEvent.timeOfEvent >= this._startOfVisibleTimeline && currEvent.timeOfEvent <= this._endOfVisibleTimeline){
                 this.visiblePartOfTimeline.push(currEvent)
             }
@@ -116,7 +114,6 @@ export default class Timeline{
     }
 
     _setDrawQueue(){
-        this._setVisiblePartOfTimeline();
         this._drawQueue = [];
         let lastXCord = undefined;
         let numWithXCord = 0;
@@ -183,39 +180,39 @@ export default class Timeline{
         console.log("===============================================")
     }
 
-    scrollLeftForTimeline(ctx){
+    scrollLeftForTimeline(){
         if(this._startOfVisibleTimeline > this._earliestEventOfTimeline){
             this._startOfVisibleTimeline = this._startOfVisibleTimeline -  (this._width * this._unitsPerPixel);
             if(this._startOfVisibleTimeline < this._earliestEventOfTimeline){
                 this._startOfVisibleTimeline = this._earliestEventOfTimeline;
             }
             this._endOfVisibleTimeline = this._startOfVisibleTimeline + (this._width * this._unitsPerPixel);
-            this.drawTimeline(ctx)
         }
+        this._setVisiblePartOfTimeline();
     }
 
-    scrollRightForTimeline(ctx){
+    scrollRightForTimeline(){
         if(this._endOfVisibleTimeline < this._latestEventOfTimeline){
             this._startOfVisibleTimeline = this._endOfVisibleTimeline;
             this._endOfVisibleTimeline = this._startOfVisibleTimeline + (this._width * this._unitsPerPixel);
-            this.drawTimeline(ctx)
         }
+        this._setVisiblePartOfTimeline();
     }
 
-    zoomOutForTimeline(ctx){
+    zoomOutForTimeline(){
         if(this._unitsPerPixel < this._maxUnitsPerPixel){
             this._unitsPerPixel = this._unitsPerPixel * 10;
             this._endOfVisibleTimeline = this._startOfVisibleTimeline + (this._width * this._unitsPerPixel);
-            this.drawTimeline(ctx);
         }
+        this._setVisiblePartOfTimeline();
     }
 
-    zoomInForTimeline(ctx){
+    zoomInForTimeline(){
         if(this._unitsPerPixel > this._minUnitsPerPixel){
             this._unitsPerPixel = this._unitsPerPixel / 10;
             this._endOfVisibleTimeline = this._startOfVisibleTimeline + (this._width * this._unitsPerPixel);
-            this.drawTimeline(ctx);
         }
+        this._setVisiblePartOfTimeline();
     }
 
 }//end of Timeline Class
