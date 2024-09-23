@@ -1,1 +1,1 @@
-This repo was used to figure out the logic and code of drawing TImelines on html canvas. I then basically used these files as is in my Timeline Repo which is also public. That's what this repo was made for: to be use in the Timeline Repo.
+This repo was used to figure out the logic and code of drawing Timelines on html canvas. I then basically used these files as is in my Timeline Repo which is also public. So that's the point of this repo's existence. To be used in my Timeline Project.
